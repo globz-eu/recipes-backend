@@ -11,7 +11,7 @@ def recipe_list(request, format=None):
     List all recipes, or create a new recipe.
     """
     if request.method == 'GET':
-        recipes = Recipe.objects.all()
+        recipes = Recipe.objects.all() # pylint: disable=no-member
         serializer = RecipeSerializer(recipes, many=True)
         return Response(serializer.data)
 
@@ -28,8 +28,8 @@ def recipe_detail(request, pk, format=None):
     Retrieve, update or delete a recipe.
     """
     try:
-        recipe = Recipe.objects.get(pk=pk)
-    except Recipe.DoesNotExist:
+        recipe = Recipe.objects.get(pk=pk) # pylint: disable=no-member
+    except Recipe.DoesNotExist: # pylint: disable=no-member
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
