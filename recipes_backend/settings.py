@@ -85,7 +85,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'recipes',
-        'HOST': '127.0.0.1',
+        'HOST': 'recipes-postgres',
         'PASSWORD': 'recipesPw',
         'NAME': 'recipes',
         'TEST': {
@@ -132,3 +132,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = 'static'
