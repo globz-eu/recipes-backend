@@ -27,8 +27,7 @@ docker run --rm --name recipes-postgres -e POSTGRES_PASSWORD=postgresPw --networ
 * Run backend uwsgi
 
 ```bash
-docker build docker/recipes/. -t globz/recipes-backend
-docker run --rm --name recipes-backend --network recipes-backend -v $PWD:/usr/src/app -p 3031:3031 globz/recipes-backend
+docker run --rm --name recipes-backend --network recipes-backend -v $PWD:/usr/src/app -p 3031:3031 globz/django-runner
 ```
 
 * Collect static
