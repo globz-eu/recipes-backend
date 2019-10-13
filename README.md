@@ -31,9 +31,14 @@ docker build docker/recipes/. -t globz/recipes-backend
 docker run --rm --name recipes-backend --network recipes-backend -v $PWD:/usr/src/app -p 3031:3031 globz/recipes-backend
 ```
 
+* Collect static
+
+```bash
+python manage.py collectstatic --noinput
+```
+
 * Run backend nginx proxy
 
 ```bash
-docker build docker/nginx/. -t recipes-backend-nginx
-docker run --rm --name recipes-backend-nginx --network recipes-backend -p 8000:80 -v $PWD/static:/usr/nginx/html/recipes-backend/static recipes-backend-nginx
+docker run --rm --name recipes-backend-nginx --network recipes-backend -p 8000:80 -e "APP_HOST=recipes-backend" -e "APP_PORT=3031" -e "APP_NAME=recipes-backend" -v $PWD/static:/usr/nginx/html/recipes-backend/static globz/nginx-uwsgi-gateway
 ```
