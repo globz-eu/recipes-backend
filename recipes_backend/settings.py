@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+try:
+    POSTGRES_PASSWORD = os.environ['POSTGRES_PASSWORD']
+except KeyError:
+    POSTGRES_PASSWORD = 'recipesPw'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -86,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'recipes',
         'HOST': 'recipes-postgres',
-        'PASSWORD': 'recipesPw',
+        'PASSWORD': POSTGRES_PASSWORD,
         'NAME': 'recipes',
         'TEST': {
             'NAME': 'test_recipes',
