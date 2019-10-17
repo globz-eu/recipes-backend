@@ -27,13 +27,16 @@ docker run --rm --name recipes-postgres -e APP_USER=$APP_USER -e APP_DB=$APP_DB 
 * Run backend uwsgi
 
 ```bash
-docker run --rm --name recipes-backend --network recipes-backend -e APP_USER=$APP_USER -e APP_DB=$APP_DB -e APP_TEST_DB=$APP_TEST_DB -e APP_USER_PASSWORD=$APP_USER_PASSWORD -v $PWD:/usr/src/app -p 3031:3031 globz/django-runner
+cd docker
+docker build -t globz/recipe-backend .
+cd ..
+docker run --rm --name recipes-backend --network recipes-backend -e APP_USER=$APP_USER -e APP_DB=$APP_DB -e APP_TEST_DB=$APP_TEST_DB -e APP_USER_PASSWORD=$APP_USER_PASSWORD -p 3031:3031 globz/recipe-backend -r
 ```
 
 * Collect static
 
 ```bash
-python manage.py collectstatic --noinput
+docker run --rm --name recipes-backend --network recipes-backend -e APP_USER=$APP_USER -e APP_DB=$APP_DB -e APP_TEST_DB=$APP_TEST_DB -e APP_USER_PASSWORD=$APP_USER_PASSWORD -v $PWD/static:/usr/src/app/static -p 3031:3031 globz/recipe-backend -c
 ```
 
 * Run backend nginx proxy
