@@ -85,7 +85,7 @@ DATABASES = {
         'PASSWORD': setting('APP_USER_PASSWORD'),
         'NAME': setting('APP_DB'),
         'TEST': {
-            'NAME': setting('APP_TEST_DB'),
+            'NAME': 'recipes-test',
         },
     }
 }
