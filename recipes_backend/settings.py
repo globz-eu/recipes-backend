@@ -21,7 +21,7 @@ SECRET_KEY = '2m1t+an%(9%8e!q3x*(9_ak_#rhn33$jfrb(nek1pt=uk#)3tk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [setting('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = [setting('ALLOWED_HOST')]
 
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:8080',
