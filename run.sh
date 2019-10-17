@@ -18,13 +18,11 @@ done
 
 if ${RUN};
 then
-    echo RUN
     python manage.py makemigrations
     python manage.py migrate
     uwsgi --ini uwsgi.ini
 fi
 if ${COLLECT_STATIC};
 then
-    echo COLLECT_STATIC
     python manage.py collectstatic --noinput
 fi
