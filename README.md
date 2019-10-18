@@ -34,13 +34,13 @@ docker run --rm --name recipes-postgres -e APP_USER=$APP_USER -e APP_DB=$APP_DB 
 * Collect static
 
 ```bash
-docker run --rm --name recipes-collect-static -e ALLOWED_HOST=$ALLOWED_HOST -e FRONTEND_HOST=$FRONTEND_HOST -e DB_HOST=$DB_HOST -e APP_USER=$APP_USER -e APP_DB=$APP_DB -e APP_USER_PASSWORD=$APP_USER_PASSWORD -v $PWD/static:/usr/src/app/static globz/recipes-backend -c
+docker run --rm --name recipes-collect-static -e SECRET_KEY=$SECRET_KEY -e ALLOWED_HOST=$ALLOWED_HOST -e FRONTEND_HOST=$FRONTEND_HOST -e DB_HOST=$DB_HOST -e APP_USER=$APP_USER -e APP_DB=$APP_DB -e APP_USER_PASSWORD=$APP_USER_PASSWORD -v $PWD/static:/usr/src/app/static globz/recipes-backend -c
 ```
 
 * Run backend uwsgi
 
 ```bash
-docker run --rm --name recipes-backend --network recipes-backend -e ALLOWED_HOST=$ALLOWED_HOST -e FRONTEND_HOST=$FRONTEND_HOST -e DB_HOST=$DB_HOST -e APP_USER=$APP_USER -e APP_DB=$APP_DB -e APP_USER_PASSWORD=$APP_USER_PASSWORD -p 3031:3031 globz/recipes-backend -r
+docker run --rm --name recipes-backend --network recipes-backend -e SECRET_KEY=$SECRET_KEY -e ALLOWED_HOST=$ALLOWED_HOST -e FRONTEND_HOST=$FRONTEND_HOST -e DB_HOST=$DB_HOST -e APP_USER=$APP_USER -e APP_DB=$APP_DB -e APP_USER_PASSWORD=$APP_USER_PASSWORD -p 3031:3031 globz/recipes-backend -r
 ```
 
 * Run backend nginx proxy
