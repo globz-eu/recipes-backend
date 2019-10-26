@@ -2,11 +2,14 @@ import os
 from django.core.exceptions import ImproperlyConfigured
 
 
-def setting(parameter):
+def setting(parameter, accept_empty=False):
     try:
         return os.environ[parameter]
     except KeyError:
-        raise ImproperlyConfigured("Set the {} parameter".format(parameter))
+        if not accept_empty:
+            raise ImproperlyConfigured("Set the {} parameter".format(parameter))
+        else:
+            return None
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,15 +22,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = setting('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = setting('DEBUG', accept_empty=True) == "True"
 
 ALLOWED_HOSTS = [setting('ALLOWED_HOST')]
 
-CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:8080',
-    'http://localhost:8080',
-    'https://{}'.format(setting('FRONTEND_HOST'))
-]
+FRONTEND_HOST = setting('FRONTEND_HOST', accept_empty=True)
+
+CORS_ORIGIN_WHITELIST = []
+
+if DEBUG:
+    CORS_ORIGIN_WHITELIST.extend([
+        'http://127.0.0.1:8080',
+        'http://localhost:8080'
+    ])
+
+if FRONTEND_HOST:
+    CORS_ORIGIN_WHITELIST.append('https://{}'.format(FRONTEND_HOST))
 
 # Application definition
 
@@ -131,3 +141,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = 'static'
+
+if __name__ == '__main__':
+    print('DEBUG', DEBUG)
+    print('ALLOWED_HOSTS', ALLOWED_HOSTS)
+    print('CORS_ORIGIN_WHITELIST', CORS_ORIGIN_WHITELIST)
