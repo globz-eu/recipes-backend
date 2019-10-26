@@ -141,8 +141,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = 'static'
-
-if __name__ == '__main__':
-    print('DEBUG', DEBUG)
-    print('ALLOWED_HOSTS', ALLOWED_HOSTS)
-    print('CORS_ORIGIN_WHITELIST', CORS_ORIGIN_WHITELIST)
