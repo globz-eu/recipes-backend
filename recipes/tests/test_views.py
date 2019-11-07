@@ -28,7 +28,7 @@ class GetAllRecipesTest(TestCase):
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class GetSinglePuppyTest(TestCase):
+class GetSingleRecipeTest(TestCase):
     """ Test module for GET single recipe API """
 
     def setUp(self):
@@ -69,6 +69,10 @@ class CreateNewRecipeTest(TestCase):
             data=json.dumps(self.valid_payload),
             content_type='application/json'
         )
+        self.assertEqual(
+            {key: response.data[key] for key in self.valid_payload.keys},
+            self.valid_payload
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_recipe(self):
@@ -79,8 +83,8 @@ class CreateNewRecipeTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-class UpdateSinglePuppyTest(TestCase):
-    """ Test module for updating an existing puppy record """
+class UpdateSingleRecipeTest(TestCase):
+    """ Test module for updating an existing recipe """
 
     def setUp(self):
         self.lekker = Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
@@ -102,9 +106,12 @@ class UpdateSinglePuppyTest(TestCase):
             data=json.dumps(self.valid_payload),
             content_type='application/json'
         )
+        recipe = Recipe.objects.get(pk=self.lekker.pk)
+        serializer = RecipeSerializer(recipe)
+        self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_invalid_update_puppy(self):
+    def test_invalid_update_recipe(self):
         response = client.put(
             reverse('recipe_detail', kwargs={'pk': self.pas_mal.pk}),
             data=json.dumps(self.invalid_payload),
@@ -112,7 +119,7 @@ class UpdateSinglePuppyTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 class DeleteSingleRecipeTest(TestCase):
-    """ Test module for deleting an existing recipe record """
+    """ Test module for deleting an existing recipe """
 
     def setUp(self):
         self.lekker = Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
@@ -127,7 +134,7 @@ class DeleteSingleRecipeTest(TestCase):
             reverse('recipe_detail', kwargs={'pk': self.lekker.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_invalid_delete_puppy(self):
+    def test_invalid_delete_recipe(self):
         response = client.delete(
-            reverse('recipe_detail', kwargs={'pk': 30}))
+            reverse('recipe_detail', kwargs={'pk': 3}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

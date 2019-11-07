@@ -28,8 +28,8 @@ def recipe_detail(request, pk, format=None):
     Retrieve, update or delete a recipe.
     """
     try:
-        recipe = Recipe.objects.get(pk=pk) # pylint: disable=no-member
-    except Recipe.DoesNotExist: # pylint: disable=no-member
+        recipe = Recipe.objects.get(pk=pk)
+    except Recipe.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
