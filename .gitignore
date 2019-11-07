@@ -2,3 +2,5 @@ db.sqlite3
 database
 static
 env.sh
+.coverage
+htmlcov

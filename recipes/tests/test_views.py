@@ -6,7 +6,7 @@ from ..models import Recipe
 from ..serializers import RecipeSerializer
 
 
-client = Client()
+client = Client()  # pylint: disable=invalid-name
 
 class GetAllRecipesTest(TestCase):
     """ Test module for GET all recipes API """
@@ -70,7 +70,7 @@ class CreateNewRecipeTest(TestCase):
             content_type='application/json'
         )
         self.assertEqual(
-            {key: response.data[key] for key in self.valid_payload.keys},
+            {key: response.data[key] for key in self.valid_payload.keys},  # pylint: disable=not-an-iterable
             self.valid_payload
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
