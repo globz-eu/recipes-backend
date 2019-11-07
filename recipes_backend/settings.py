@@ -91,9 +91,9 @@ WSGI_APPLICATION = 'recipes_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'USER': setting('APP_USER'),
+        'USER': setting('APP_USER') if not DEBUG else 'postgres',
         'HOST': setting('DB_HOST'),
-        'PASSWORD': setting('APP_USER_PASSWORD'),
+        'PASSWORD': setting('APP_USER_PASSWORD')if not DEBUG else setting('POSTGRES_PASSWORD'),
         'NAME': setting('APP_DB'),
         'TEST': {
             'NAME': 'recipes-test',
