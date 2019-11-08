@@ -70,7 +70,7 @@ class CreateNewRecipeTest(TestCase):
             content_type='application/json'
         )
         self.assertEqual(
-            {key: response.data[key] for key in self.valid_payload.keys},  # pylint: disable=not-an-iterable
+            {key: response.data[key] for key in self.valid_payload.keys()},
             self.valid_payload
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
