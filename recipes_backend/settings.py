@@ -95,9 +95,6 @@ DATABASES = {
         'HOST': setting('DB_HOST'),
         'PASSWORD': setting('APP_USER_PASSWORD')if not DEBUG else setting('POSTGRES_PASSWORD'),
         'NAME': setting('APP_DB'),
-        'TEST': {
-            'NAME': 'recipes-test',
-        },
     }
 }
 
