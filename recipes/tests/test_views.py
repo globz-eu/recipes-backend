@@ -12,12 +12,15 @@ class GetAllRecipesTest(TestCase):
     """ Test module for GET all recipes API """
 
     def setUp(self):
-        Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
-        Recipe.objects.create(
+        self.lekker = Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
+        self.pas_mal = Recipe.objects.create(
             name='Pas mal',
             for_persons=2,
             instructions='Servir sur un lit de choucroute'
         )
+
+    def tearDown(self):
+        Recipe.objects.all().delete()
 
     def test_get_all_recipes(self):
         # get API response
@@ -38,6 +41,9 @@ class GetSingleRecipeTest(TestCase):
             for_persons=2,
             instructions='Servir sur un lit de choucroute'
         )
+
+    def tearDown(self):
+        Recipe.objects.all().delete()
 
     def test_get_valid_single_recipe(self):
         response = client.get(
@@ -62,6 +68,9 @@ class CreateNewRecipeTest(TestCase):
             for_persons=2,
             instructions='Servir sur un lit de choucroute'
         )
+
+    def tearDown(self):
+        Recipe.objects.all().delete()
 
     def test_create_valid_recipe(self):
         response = client.post(
@@ -100,6 +109,9 @@ class UpdateSingleRecipeTest(TestCase):
             instructions='Servir sur un lit de choucroute et fenouil'
         )
 
+    def tearDown(self):
+        Recipe.objects.all().delete()
+
     def test_valid_update_recipe(self):
         response = client.put(
             reverse('recipe_detail', kwargs={'pk': self.lekker.pk}),
@@ -129,6 +141,9 @@ class DeleteSingleRecipeTest(TestCase):
             instructions='Servir sur un lit de choucroute'
         )
 
+    def tearDown(self):
+        Recipe.objects.all().delete()
+
     def test_valid_delete_recipe(self):
         response = client.delete(
             reverse('recipe_detail', kwargs={'pk': self.lekker.pk}))
@@ -136,5 +151,5 @@ class DeleteSingleRecipeTest(TestCase):
 
     def test_invalid_delete_recipe(self):
         response = client.delete(
-            reverse('recipe_detail', kwargs={'pk': 3}))
+            reverse('recipe_detail', kwargs={'pk': self.pas_mal.pk + 1}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
