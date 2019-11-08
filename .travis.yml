@@ -1,30 +1,30 @@
 jobs:
   include:
     - stage: test
-    language: python
-    python:
-      - "3.6"
-      - "3.7"
-      - "3.8"
-    addons:
-      postgresql: "10"
-      apt:
-        packages:
-        - postgresql-10
-        - postgresql-client-10
-    install:
-      - pip install -r requirements.txt
-    env:
-      - SECRET_KEY='Kf33^8fVAMsRW2d!@EMMMK@G5jRQXmQ!DBcax9V^jXPp9F3PFw' \
-        ALLOWED_HOST='127.0.0.1' \
-        APP_USER='' \
-        APP_DB='' \
-        APP_USER_PASSWORD='' \
-        DB_HOST='127.0.0.1' \
-        POSTGRES_PASSWORD=''
-    script:
-      - python manage.py test --parallel
+      language: python
+      python:
+        - "3.6"
+        - "3.7"
+        - "3.8"
+      addons:
+        postgresql: "10"
+        apt:
+          packages:
+          - postgresql-10
+          - postgresql-client-10
+      install:
+        - pip install -r requirements.txt
+      env:
+        - SECRET_KEY='Kf33^8fVAMsRW2d!@EMMMK@G5jRQXmQ!DBcax9V^jXPp9F3PFw' \
+          ALLOWED_HOST='127.0.0.1' \
+          APP_USER='' \
+          APP_DB='' \
+          APP_USER_PASSWORD='' \
+          DB_HOST='127.0.0.1' \
+          POSTGRES_PASSWORD=''
+      script:
+        - python manage.py test --parallel
 
     - stage: deploy
-    script:
-      - curl -X POST $DOCKER_HUB_BUILD_TRIGGER
+      script:
+        - curl -X POST $DOCKER_HUB_BUILD_TRIGGER
