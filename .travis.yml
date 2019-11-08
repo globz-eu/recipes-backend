@@ -1,11 +1,11 @@
 language: python
-jobs:
-  include:
-    - stage: test
-      python:
+python:
         - "3.6"
         - "3.7"
         - "3.8"
+jobs:
+  include:
+    - stage: test
       addons:
         postgresql: "10"
         apt:
@@ -26,5 +26,6 @@ jobs:
         - python manage.py test --parallel
 
     - stage: deploy
+      python: 3.8
       script:
         - curl -X POST $DOCKER_HUB_BUILD_TRIGGER
