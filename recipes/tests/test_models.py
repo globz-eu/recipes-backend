@@ -7,9 +7,9 @@ class RecipeTest(TestCase):
 
 
     def setUp(self):
-        Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
+        Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
 
     def test_db_fields(self):
         recipe_lekker = Recipe.objects.get(name='Lekker')
         self.assertEqual(recipe_lekker.instructions, 'Stir well')
-        self.assertEqual(recipe_lekker.for_persons, 3)
+        self.assertEqual(recipe_lekker.servings, 3)

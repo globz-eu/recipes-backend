@@ -6,4 +6,4 @@ from recipes.models import Recipe
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ['id', 'name', 'for_persons', 'instructions', 'created']
+        fields = ['id', 'name', 'servings', 'instructions', 'created']

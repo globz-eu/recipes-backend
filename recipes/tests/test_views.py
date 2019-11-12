@@ -12,10 +12,10 @@ class GetAllRecipesTest(TestCase):
     """ Test module for GET all recipes API """
 
     def setUp(self):
-        self.lekker = Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
+        self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
-            for_persons=2,
+            servings=2,
             instructions='Servir sur un lit de choucroute'
         )
 
@@ -35,10 +35,10 @@ class GetSingleRecipeTest(TestCase):
     """ Test module for GET single recipe API """
 
     def setUp(self):
-        self.lekker = Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
+        self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
-            for_persons=2,
+            servings=2,
             instructions='Servir sur un lit de choucroute'
         )
 
@@ -62,10 +62,10 @@ class CreateNewRecipeTest(TestCase):
     """ Test module for inserting a new recipe """
 
     def setUp(self):
-        self.valid_payload = dict(name='Lekker', for_persons=3, instructions='Stir well')
+        self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir well')
         self.invalid_payload = dict(
             name='',
-            for_persons=2,
+            servings=2,
             instructions='Servir sur un lit de choucroute'
         )
 
@@ -96,16 +96,16 @@ class UpdateSingleRecipeTest(TestCase):
     """ Test module for updating an existing recipe """
 
     def setUp(self):
-        self.lekker = Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
+        self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
-            for_persons=2,
+            servings=2,
             instructions='Servir sur un lit de choucroute'
         )
-        self.valid_payload = dict(name='Lekker', for_persons=3, instructions='Stir for 2 hours')
+        self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir for 2 hours')
         self.invalid_payload = dict(
             name='',
-            for_persons=2,
+            servings=2,
             instructions='Servir sur un lit de choucroute et fenouil'
         )
 
@@ -134,10 +134,10 @@ class DeleteSingleRecipeTest(TestCase):
     """ Test module for deleting an existing recipe """
 
     def setUp(self):
-        self.lekker = Recipe.objects.create(name='Lekker', for_persons=3, instructions='Stir well')
+        self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
-            for_persons=2,
+            servings=2,
             instructions='Servir sur un lit de choucroute'
         )
 
