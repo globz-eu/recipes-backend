@@ -7,7 +7,13 @@ Backend for [Recipes](https://github.com/globz-eu/recipes)
 * Setup database
 
 ```bash
-docker run --rm --name recipes_postgres -e POSTGRES_PASSWORD=postgresPw -it -p 5432:5432 -v $PWD/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh -d postgres
+docker run --rm --name recipes_postgres -e POSTGRES_PASSWORD=$POSTGRE_PASSWORD -p 5432:5432 -d postgres
+```
+
+* Run tests
+
+```bash
+python manage.py test --parallel
 ```
 
 ## Run backend
