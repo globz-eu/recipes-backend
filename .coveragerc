@@ -1,0 +1,5 @@
+[run]
+source = recipes
+omit =
+    recipes/tests/*
+    recipes/migrations/*
