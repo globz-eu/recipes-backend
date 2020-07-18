@@ -22,7 +22,6 @@ class GetAllRecipesTest(APITestCase):
 
     def tearDown(self):
         self.client.force_authenticate(user=None)
-        Recipe.objects.all().delete()
 
     def test_get_all_recipes(self):
         response = self.client.get(reverse('recipe_list'))
@@ -42,9 +41,6 @@ class GetAllRecipesAsUnauthenticatedTest(APITestCase):
             servings=2,
             instructions='Servir sur un lit de choucroute'
         )
-
-    def tearDown(self):
-        Recipe.objects.all().delete()
 
     def test_get_all_recipes(self):
         response = self.client.get(reverse('recipe_list'))
@@ -66,7 +62,6 @@ class GetSingleRecipeTest(APITestCase):
 
     def tearDown(self):
         self.client.force_authenticate(user=None)
-        Recipe.objects.all().delete()
 
     def test_get_valid_single_recipe(self):
         response = self.client.get(
@@ -92,9 +87,6 @@ class GetSingleRecipeUnauthenticatedTest(APITestCase):
             servings=2,
             instructions='Servir sur un lit de choucroute'
         )
-
-    def tearDown(self):
-        Recipe.objects.all().delete()
 
     def test_get_valid_single_recipe(self):
         response = self.client.get(
@@ -122,7 +114,6 @@ class CreateNewRecipeTest(APITestCase):
 
     def tearDown(self):
         self.client.force_authenticate(user=None)
-        Recipe.objects.all().delete()
 
     def test_create_valid_recipe(self):
         response = self.client.post(
@@ -155,9 +146,6 @@ class CreateNewRecipeUnauthenticatedTest(APITestCase):
             servings=2,
             instructions='Servir sur un lit de choucroute'
         )
-
-    def tearDown(self):
-        Recipe.objects.all().delete()
 
     def test_create_valid_recipe(self):
         response = self.client.post(
@@ -197,7 +185,6 @@ class UpdateSingleRecipeTest(APITestCase):
 
     def tearDown(self):
         self.client.force_authenticate(user=None)
-        Recipe.objects.all().delete()
 
     def test_valid_update_recipe(self):
         response = self.client.put(
@@ -235,9 +222,6 @@ class UpdateSingleRecipeUnauthenticatedTest(APITestCase):
             instructions='Servir sur un lit de choucroute et fenouil'
         )
 
-    def tearDown(self):
-        Recipe.objects.all().delete()
-
     def test_valid_update_recipe(self):
         response = self.client.put(
             reverse('recipe_detail', kwargs={'pk': self.lekker.pk}),
@@ -269,7 +253,6 @@ class DeleteSingleRecipeTest(APITestCase):
 
     def tearDown(self):
         self.client.force_authenticate(user=None)
-        Recipe.objects.all().delete()
 
     def test_valid_delete_recipe(self):
         response = self.client.delete(
@@ -292,9 +275,6 @@ class DeleteSingleRecipeUnauthenticatedTest(APITestCase):
             servings=2,
             instructions='Servir sur un lit de choucroute'
         )
-
-    def tearDown(self):
-        Recipe.objects.all().delete()
 
     def test_valid_delete_recipe(self):
         response = self.client.delete(
