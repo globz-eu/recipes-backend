@@ -25,9 +25,7 @@ class GetAllRecipesTest(APITestCase):
         Recipe.objects.all().delete()
 
     def test_get_all_recipes(self):
-        # get API response
         response = self.client.get(reverse('recipe_list'))
-        # get data from db
         recipes = Recipe.objects.all()
         serializer = RecipeSerializer(recipes, many=True)
         self.assertEqual(response.data, serializer.data)
@@ -49,7 +47,6 @@ class GetAllRecipesAsUnauthenticatedTest(APITestCase):
         Recipe.objects.all().delete()
 
     def test_get_all_recipes(self):
-        # get API response
         response = self.client.get(reverse('recipe_list'))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
