@@ -23,8 +23,3 @@ jobs:
            API_IDENTIFIER='https://api-name'
       script:
         - python manage.py test --parallel
-
-    - stage: deploy
-      python: 3.8
-      script:
-        - curl -X POST $DOCKER_HUB_BUILD_TRIGGER
