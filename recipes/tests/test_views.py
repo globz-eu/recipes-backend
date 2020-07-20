@@ -1,7 +1,7 @@
 import json
 import os
 from rest_framework import status
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from ..models import Recipe
@@ -10,11 +10,10 @@ from ..serializers import RecipeSerializer
 
 
 class GetAllRecipesTest(APITestCase):
-    """ Test module for GET all recipes API """
 
     def setUp(self):
         self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user) # pylint: disable=no-member
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
@@ -23,7 +22,7 @@ class GetAllRecipesTest(APITestCase):
         )
 
     def tearDown(self):
-        self.client.force_authenticate(user=None)
+        self.client.force_authenticate(user=None) # pylint: disable=no-member
 
     def test_get_all_recipes(self):
         response = self.client.get(reverse('recipe_list'))
@@ -54,7 +53,7 @@ class GetSingleRecipeTest(APITestCase):
 
     def setUp(self):
         self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user) # pylint: disable=no-member
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
@@ -63,7 +62,7 @@ class GetSingleRecipeTest(APITestCase):
         )
 
     def tearDown(self):
-        self.client.force_authenticate(user=None)
+        self.client.force_authenticate(user=None) # pylint: disable=no-member
 
     def test_get_valid_single_recipe(self):
         response = self.client.get(
@@ -106,7 +105,7 @@ class CreateNewRecipeTest(APITestCase):
 
     def setUp(self):
         self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user) # pylint: disable=no-member
         self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir well')
         self.invalid_payload = dict(
             name='',
@@ -115,7 +114,7 @@ class CreateNewRecipeTest(APITestCase):
         )
 
     def tearDown(self):
-        self.client.force_authenticate(user=None)
+        self.client.force_authenticate(user=None) # pylint: disable=no-member
 
     def test_create_valid_recipe(self):
         response = self.client.post(
@@ -124,7 +123,7 @@ class CreateNewRecipeTest(APITestCase):
             content_type='application/json'
         )
         self.assertEqual(
-            {key: response.data[key] for key in self.valid_payload.keys()},
+            {key: response.data[key] for key in self.valid_payload},
             self.valid_payload
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -171,7 +170,7 @@ class UpdateSingleRecipeTest(APITestCase):
 
     def setUp(self):
         self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user) # pylint: disable=no-member
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
@@ -186,7 +185,7 @@ class UpdateSingleRecipeTest(APITestCase):
         )
 
     def tearDown(self):
-        self.client.force_authenticate(user=None)
+        self.client.force_authenticate(user=None) # pylint: disable=no-member
 
     def test_valid_update_recipe(self):
         response = self.client.put(
@@ -245,7 +244,7 @@ class DeleteSingleRecipeTest(APITestCase):
 
     def setUp(self):
         self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.user) # pylint: disable=no-member
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
@@ -254,7 +253,7 @@ class DeleteSingleRecipeTest(APITestCase):
         )
 
     def tearDown(self):
-        self.client.force_authenticate(user=None)
+        self.client.force_authenticate(user=None) # pylint: disable=no-member
 
     def test_valid_delete_recipe(self):
         response = self.client.delete(

@@ -11,7 +11,7 @@ def setting(parameter, accept_empty=False):
         return os.environ[parameter]
     except KeyError:
         if not accept_empty:
-            raise ImproperlyConfigured("Set the {} parameter".format(parameter))
+            raise ImproperlyConfigured(f'Set the {parameter} parameter')
 
         return None
 
@@ -41,7 +41,7 @@ if DEBUG:
     ])
 
 if FRONTEND_HOST:
-    CORS_ORIGIN_WHITELIST.append('https://{}'.format(FRONTEND_HOST))
+    CORS_ORIGIN_WHITELIST.append(f'https://{FRONTEND_HOST}')
 
 # Application definition
 
@@ -147,10 +147,10 @@ STATIC_ROOT = 'static'
 ## Add JWT authentication to default authentication classes
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated', # All views have this permission active (unless overwritten).
+        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-       'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
 
@@ -160,14 +160,14 @@ PUBLIC_KEY = None
 JWT_ISSUER = None
 
 if AUTH0_DOMAIN:
-    jsonurl = request.urlopen('https://' + AUTH0_DOMAIN + '/.well-known/jwks.json')
+    jsonurl = request.urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read().decode('utf-8'))
-    cert = '-----BEGIN CERTIFICATE-----\n' + jwks['keys'][0]['x5c'][0] + '\n-----END CERTIFICATE-----'
+    cert = f"-----BEGIN CERTIFICATE-----\n{jwks['keys'][0]['x5c'][0]}\n-----END CERTIFICATE-----"
     certificate = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
     PUBLIC_KEY = certificate.public_key()
-    JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
+    JWT_ISSUER = f'https://{AUTH0_DOMAIN}/'
 
-def jwt_get_username_from_payload_handler(payload):
+def jwt_get_username_from_payload_handler():
     return 'auth0user'
 
 JWT_AUTH = {

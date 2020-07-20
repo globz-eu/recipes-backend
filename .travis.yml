@@ -24,4 +24,5 @@ jobs:
            AUTH0_EMAIL='username@domain.eu' \
            API_IDENTIFIER='https://api-name'
       script:
+        - pylint --load-plugins pylint_django recipes recipes_backend
         - python manage.py test --parallel
