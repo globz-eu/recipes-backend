@@ -167,8 +167,8 @@ if AUTH0_DOMAIN:
     PUBLIC_KEY = certificate.public_key()
     JWT_ISSUER = f'https://{AUTH0_DOMAIN}/'
 
-def jwt_get_username_from_payload_handler():
-    return 'auth0user'
+def jwt_get_username_from_payload_handler(payload): # pylint: disable=unused-argument
+    return setting('AUTH0_USERNAME')
 
 JWT_AUTH = {
     'JWT_PAYLOAD_GET_USERNAME_HANDLER': jwt_get_username_from_payload_handler,
