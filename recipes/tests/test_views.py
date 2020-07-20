@@ -1,4 +1,5 @@
 import json
+import os
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
@@ -7,11 +8,12 @@ from ..models import Recipe
 from ..serializers import RecipeSerializer
 
 
+
 class GetAllRecipesTest(APITestCase):
     """ Test module for GET all recipes API """
 
     def setUp(self):
-        self.user = User.objects.get(username='auth0user')
+        self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
         self.client.force_authenticate(user=self.user)
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
@@ -51,7 +53,7 @@ class GetSingleRecipeTest(APITestCase):
     """ Test module for GET single recipe API """
 
     def setUp(self):
-        self.user = User.objects.get(username='auth0user')
+        self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
         self.client.force_authenticate(user=self.user)
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
@@ -103,7 +105,7 @@ class CreateNewRecipeTest(APITestCase):
     """ Test module for inserting a new recipe """
 
     def setUp(self):
-        self.user = User.objects.get(username='auth0user')
+        self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
         self.client.force_authenticate(user=self.user)
         self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir well')
         self.invalid_payload = dict(
@@ -168,7 +170,7 @@ class UpdateSingleRecipeTest(APITestCase):
     """ Test module for updating an existing recipe """
 
     def setUp(self):
-        self.user = User.objects.get(username='auth0user')
+        self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
         self.client.force_authenticate(user=self.user)
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(
@@ -242,7 +244,7 @@ class DeleteSingleRecipeTest(APITestCase):
     """ Test module for deleting an existing recipe """
 
     def setUp(self):
-        self.user = User.objects.get(username='auth0user')
+        self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
         self.client.force_authenticate(user=self.user)
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
         self.pas_mal = Recipe.objects.create(

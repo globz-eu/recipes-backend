@@ -20,6 +20,8 @@ jobs:
            DB_HOST='127.0.0.1' \
            POSTGRES_PASSWORD='' \
            AUTH0_DOMAIN='domain.eu.auth0.com' \
+           AUTH0_USERNAME='Auth0user' \
+           AUTH0_EMAIL='username@domain.eu' \
            API_IDENTIFIER='https://api-name'
       script:
         - python manage.py test --parallel
