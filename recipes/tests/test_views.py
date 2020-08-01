@@ -8,7 +8,6 @@ from ..models import Recipe
 from ..serializers import RecipeSerializer
 
 
-
 class GetAllRecipesTest(APITestCase):
 
     def setUp(self):
