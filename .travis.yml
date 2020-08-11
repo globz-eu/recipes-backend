@@ -18,11 +18,11 @@ jobs:
            APP_DB='' \
            APP_USER_PASSWORD='' \
            DB_HOST='127.0.0.1' \
-           POSTGRES_PASSWORD=''
+           POSTGRES_PASSWORD='' \
+           AUTH0_DOMAIN='domain.eu.auth0.com' \
+           AUTH0_USERNAME='Auth0user' \
+           AUTH0_EMAIL='username@domain.eu' \
+           API_IDENTIFIER='https://api-name'
       script:
+        - pylint --load-plugins pylint_django recipes recipes_backend
         - python manage.py test --parallel
-
-    - stage: deploy
-      python: 3.8
-      script:
-        - curl -X POST $DOCKER_HUB_BUILD_TRIGGER

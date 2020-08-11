@@ -3,8 +3,6 @@ from ..models import Recipe
 
 
 class RecipeTest(TestCase):
-    """ Test module for Recipe model """
-
 
     def setUp(self):
         Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
