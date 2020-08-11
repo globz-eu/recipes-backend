@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from recipes.models import Recipe
-from recipes.serializers import RecipeSerializer
+from recipes.serializers import RecipeSerializer, RecipeListSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -12,7 +12,7 @@ def recipe_list(request, format=None):  # pylint: disable=redefined-builtin,unus
     """
     if request.method == 'GET':
         recipes = Recipe.objects.all()
-        serializer = RecipeSerializer(recipes, many=True)
+        serializer = RecipeListSerializer(recipes, many=True)
         return Response(serializer.data)
 
     if request.method == 'POST':

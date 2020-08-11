@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from ..models import Recipe
-from ..serializers import RecipeSerializer
+from ..serializers import RecipeSerializer, RecipeListSerializer
 
 
 class GetAllRecipesTest(APITestCase):
@@ -26,7 +26,7 @@ class GetAllRecipesTest(APITestCase):
     def test_get_all_recipes(self):
         response = self.client.get(reverse('recipe_list'))
         recipes = Recipe.objects.all()
-        serializer = RecipeSerializer(recipes, many=True)
+        serializer = RecipeListSerializer(recipes, many=True)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
