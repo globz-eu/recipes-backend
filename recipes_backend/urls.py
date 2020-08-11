@@ -7,7 +7,7 @@ from recipes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('recipes/', views.recipe_list, name='recipe_list'),
+    path('recipes/', views.recipes, name='recipes'),
     path('recipes/<int:pk>', views.recipe_detail, name='recipe_detail'),
 ]
 

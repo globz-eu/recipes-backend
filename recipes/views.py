@@ -6,13 +6,13 @@ from recipes.serializers import RecipeSerializer, RecipeListSerializer
 
 
 @api_view(['GET', 'POST'])
-def recipe_list(request, format=None):  # pylint: disable=redefined-builtin,unused-argument
+def recipes(request, format=None):  # pylint: disable=redefined-builtin,unused-argument
     """
     List all recipes, or create a new recipe.
     """
     if request.method == 'GET':
-        recipes = Recipe.objects.all()
-        serializer = RecipeListSerializer(recipes, many=True)
+        recipes_list = Recipe.objects.all()
+        serializer = RecipeListSerializer(recipes_list, many=True)
         return Response(serializer.data)
 
     if request.method == 'POST':
