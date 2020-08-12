@@ -1,6 +1,4 @@
-from rest_framework import status
-from django.urls import reverse
-from recipes.tests.views.initialize import InitializeRecipes, Authenticate
+from . import status, reverse, InitializeRecipes, Authenticate
 
 
 class DeleteSingleRecipeTest(InitializeRecipes, Authenticate):
