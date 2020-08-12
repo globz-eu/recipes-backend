@@ -1,26 +1,13 @@
 import json
-import os
-from rest_framework import status
-from rest_framework.test import APITestCase
-from django.urls import reverse
-from django.contrib.auth.models import User
+from .. import reverse, status, Authenticate, SetPayloads
 
 
-class CreateNewRecipeTest(APITestCase):
+class CreateNewRecipeTest(Authenticate, SetPayloads):
     """ Test creating a new recipe """
 
     def setUp(self):
-        self.user = User.objects.get(username=os.environ['AUTH0_USERNAME'])
-        self.client.force_authenticate(user=self.user) # pylint: disable=no-member
-        self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir well')
-        self.invalid_payload = dict(
-            name='',
-            servings=2,
-            instructions='Servir sur un lit de choucroute'
-        )
-
-    def tearDown(self):
-        self.client.force_authenticate(user=None) # pylint: disable=no-member
+        Authenticate.setUp(self)
+        SetPayloads.setUp(self)
 
     def test_create_valid_recipe(self):
         response = self.client.post(
@@ -43,16 +30,8 @@ class CreateNewRecipeTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class CreateNewRecipeUnauthenticatedTest(APITestCase):
+class CreateNewRecipeUnauthenticatedTest(SetPayloads):
     """ Test creating a new recipe without authentication """
-
-    def setUp(self):
-        self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir well')
-        self.invalid_payload = dict(
-            name='',
-            servings=2,
-            instructions='Servir sur un lit de choucroute'
-        )
 
     def test_create_valid_recipe(self):
         response = self.client.post(

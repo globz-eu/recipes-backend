@@ -1,4 +1,4 @@
-from . import status, reverse, InitializeRecipes, Authenticate
+from .. import status, reverse, InitializeRecipes, Authenticate
 
 
 class DeleteSingleRecipeTest(InitializeRecipes, Authenticate):

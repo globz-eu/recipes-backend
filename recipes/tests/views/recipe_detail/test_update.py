@@ -1,19 +1,15 @@
 import json
-from . import status, reverse, InitializeRecipes, Authenticate, Recipe, RecipeSerializer
+from .. import status, reverse, InitializeRecipes, Authenticate, SetPayloads, Recipe
+from . import RecipeSerializer
 
 
-class UpdateSingleRecipeTest(InitializeRecipes, Authenticate):
+class UpdateSingleRecipeTest(InitializeRecipes, Authenticate, SetPayloads):
     """ Test updating an existing recipe """
 
     def setUp(self):
         InitializeRecipes.setUp(self)
         Authenticate.setUp(self)
-        self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir for 2 hours')
-        self.invalid_payload = dict(
-            name='',
-            servings=2,
-            instructions='Servir sur un lit de choucroute et fenouil'
-        )
+        SetPayloads.setUp(self)
 
     def test_valid_update_recipe(self):
         response = self.client.put(
@@ -34,17 +30,12 @@ class UpdateSingleRecipeTest(InitializeRecipes, Authenticate):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class UpdateSingleRecipeUnauthenticatedTest(InitializeRecipes):
+class UpdateSingleRecipeUnauthenticatedTest(InitializeRecipes, SetPayloads):
     """ Test updating an existing recipe without authentication """
 
     def setUp(self):
         InitializeRecipes.setUp(self)
-        self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir for 2 hours')
-        self.invalid_payload = dict(
-            name='',
-            servings=2,
-            instructions='Servir sur un lit de choucroute et fenouil'
-        )
+        SetPayloads.setUp(self)
 
     def test_valid_update_recipe(self):
         response = self.client.put(

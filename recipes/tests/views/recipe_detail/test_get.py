@@ -1,4 +1,5 @@
-from . import status, reverse, InitializeRecipes, Authenticate, Recipe, RecipeSerializer
+from . import RecipeSerializer
+from .. import status, reverse, InitializeRecipes, Authenticate, Recipe
 
 
 class GetSingleRecipeTest(InitializeRecipes, Authenticate):
