@@ -9,14 +9,14 @@ class IngredientAmountSerializer(ModelSerializer):
         depth = 1
 
 
-class RecipeSerializer(ModelSerializer):
+class RecipeModelSerializer(ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'name', 'servings', 'instructions', 'created']
 
 
-class RecipeWithIngredientAmountsSerializer(Serializer):  # pylint: disable=abstract-method
-    recipe = RecipeSerializer()
+class RecipeSerializer(Serializer):  # pylint: disable=abstract-method
+    recipe = RecipeModelSerializer()
     ingredient_amounts = IngredientAmountSerializer(many=True)
 
 

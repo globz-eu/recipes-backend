@@ -1,13 +1,12 @@
 from recipes.models import Recipe, IngredientAmount, Ingredient
-from recipes.serializers import RecipeSerializer, RecipeWithIngredientAmountsSerializer
-from recipes.serializers import IngredientAmountSerializer
+from recipes.serializers import RecipeModelSerializer, RecipeSerializer, IngredientAmountSerializer
 from recipes.tests.models.setup import RecipeIngredients
 
 
 class RecipeSerializerTest(RecipeIngredients):
     def test_serializer(self):
         recipe = Recipe.objects.get(pk=self.lekker.pk)
-        serializer = RecipeSerializer(recipe)
+        serializer = RecipeModelSerializer(recipe)
         self.assertEqual(serializer.data['id'], recipe.pk)
         self.assertEqual(serializer.data['name'], recipe.name)
         self.assertEqual(serializer.data['servings'], recipe.servings)
@@ -47,7 +46,7 @@ class RecipeWithIngredientAmountsSerializerTest(RecipeIngredients):
             ingredient__in=ingredients
         )
         recipe_with_ingredient_amounts = dict(recipe=recipe, ingredient_amounts=ingredient_amounts)
-        serializer = RecipeWithIngredientAmountsSerializer(recipe_with_ingredient_amounts)
+        serializer = RecipeSerializer(recipe_with_ingredient_amounts)
         self.assertEqual(serializer.data['recipe']['name'], 'Lekker')
         self.assertEqual(
             serializer.data['ingredient_amounts'][0]['ingredient']['name'],

@@ -1,1 +1,1 @@
-from recipes.serializers import RecipeSerializer
+from recipes.serializers import RecipeModelSerializer
