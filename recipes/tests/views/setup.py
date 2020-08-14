@@ -5,7 +5,7 @@ from recipes.models import Recipe
 
 
 class InitializeRecipes(APITestCase):
-    """ Initialize user, authenticate and add 2 recipes """
+    """ Initialize 2 recipes """
 
     def setUp(self):
         self.lekker = Recipe.objects.create(name='Lekker', servings=3, instructions='Stir well')
