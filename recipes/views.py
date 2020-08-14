@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from recipes.models import Recipe
-from recipes.serializers import RecipeSerializer, RecipeListSerializer
+from recipes.serializers import RecipeModelSerializer, RecipeListSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -16,7 +16,7 @@ def recipes(request, format=None):  # pylint: disable=redefined-builtin,unused-a
         return Response(serializer.data)
 
     if request.method == 'POST':
-        serializer = RecipeSerializer(data=request.data)
+        serializer = RecipeModelSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -35,11 +35,11 @@ def recipe_detail(request, pk, format=None):  # pylint: disable=redefined-builti
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = RecipeSerializer(recipe)
+        serializer = RecipeModelSerializer(recipe)
         return Response(serializer.data)
 
     if request.method == 'PUT':
-        serializer = RecipeSerializer(recipe, data=request.data)
+        serializer = RecipeModelSerializer(recipe, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)

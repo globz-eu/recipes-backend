@@ -1,6 +1,6 @@
 import json
 from .. import status, reverse, InitializeRecipes, Authenticate, SetPayloads, Recipe
-from . import RecipeSerializer
+from . import RecipeModelSerializer
 
 
 class UpdateSingleRecipeTest(InitializeRecipes, Authenticate, SetPayloads):
@@ -18,7 +18,7 @@ class UpdateSingleRecipeTest(InitializeRecipes, Authenticate, SetPayloads):
             content_type='application/json'
         )
         recipe = Recipe.objects.get(pk=self.lekker.pk)
-        serializer = RecipeSerializer(recipe)
+        serializer = RecipeModelSerializer(recipe)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
