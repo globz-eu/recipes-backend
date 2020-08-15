@@ -1,3 +1,5 @@
+import json
+from pathlib import Path, PurePath
 from django.test import TestCase
 from recipes.models import Recipe
 from recipes.tests.helpers import get_ingredient_amounts
@@ -19,35 +21,14 @@ class RecipeTest(RecipeIngredients):
 
 class RecipeCreateTest(TestCase):
     def test_recipe_create(self):
-        recipe_data = {
-            'recipe': {
-                'name': 'Lekker',
-                'servings': 3,
-                'instructions': 'Stir well'
-            },
-            'ingredient_amounts': [
-                {
-                    'ingredient': {
-                        'name': 'aubergine',
-                        'plural': 'aubergines'
-                    },
-                    'unit': {
-                        'name': 'piece'
-                    },
-                    'quantity': 2
-                },
-                {
-                    'ingredient': {
-                        'name': 'garlic',
-                        'plural': 'garlic'
-                    },
-                    'unit': {
-                        'name': 'piece'
-                    },
-                    'quantity': 1
-                }
-            ]
-        }
+        recipe_data_file = Path(
+            PurePath(
+                Path(__file__).cwd()
+            ).joinpath(
+                'recipes/tests/data/recipe.json'
+            )
+        )
+        recipe_data = json.load(recipe_data_file.open())
         recipe = Recipe.recipes.create(**recipe_data)
         self.assertEqual(recipe.name, recipe_data['recipe']['name'])
         self.assertEqual(recipe.servings, recipe_data['recipe']['servings'])
