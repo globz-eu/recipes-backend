@@ -7,6 +7,7 @@ class Ingredient(models.Model):
 
     class Meta:
         ordering = ['name']
+        constraints = [models.UniqueConstraint(fields=['name'], name='unique_ingredient_name')]
 
 
 class Recipe(models.Model):
@@ -18,6 +19,7 @@ class Recipe(models.Model):
 
     class Meta:
         ordering = ['name']
+        constraints = [models.UniqueConstraint(fields=['name'], name='unique_recipe_name')]
 
 
 class Unit(models.Model):
@@ -25,6 +27,7 @@ class Unit(models.Model):
 
     class Meta:
         ordering = ['name']
+        constraints = [models.UniqueConstraint(fields=['name'], name='unique_unit_name')]
 
 
 class IngredientAmount(models.Model):
