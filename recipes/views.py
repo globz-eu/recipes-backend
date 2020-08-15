@@ -2,7 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from recipes.models import Recipe
-from recipes.serializers import RecipeModelSerializer, RecipeListSerializer
+from recipes.serializers import RecipeSerializer, RecipeModelSerializer, RecipeListSerializer
+from recipes.helpers import get_ingredient_amounts
 
 
 @api_view(['GET', 'POST'])
@@ -35,7 +36,8 @@ def recipe_detail(request, pk, format=None):  # pylint: disable=redefined-builti
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = RecipeModelSerializer(recipe)
+        ingredient_amounts = get_ingredient_amounts(recipe)
+        serializer = RecipeSerializer(dict(recipe=recipe, ingredient_amounts=ingredient_amounts))
         return Response(serializer.data)
 
     if request.method == 'PUT':

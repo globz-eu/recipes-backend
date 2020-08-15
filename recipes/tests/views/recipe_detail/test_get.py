@@ -1,4 +1,5 @@
-from . import RecipeModelSerializer
+from recipes.helpers import get_ingredient_amounts
+from . import RecipeSerializer
 from .. import status, reverse, InitializeRecipes, Authenticate, Recipe
 
 
@@ -13,7 +14,8 @@ class GetSingleRecipeTest(InitializeRecipes, Authenticate):
         response = self.client.get(
             reverse('recipe_detail', kwargs={'pk': self.lekker.pk}))
         recipe = Recipe.objects.get(pk=self.lekker.pk)
-        serializer = RecipeModelSerializer(recipe)
+        ingredient_amounts = get_ingredient_amounts(recipe)
+        serializer = RecipeSerializer(dict(recipe=recipe, ingredient_amounts=ingredient_amounts))
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
