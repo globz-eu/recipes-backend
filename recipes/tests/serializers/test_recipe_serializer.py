@@ -29,7 +29,7 @@ class IngredientAmountSerializerTest(RecipeIngredients):
         ingredient_ids = [ingredient.pk for ingredient in recipe.ingredient_amounts.all()]
         ingredients = Ingredient.objects.filter(pk__in=ingredient_ids)
         ingredient_amounts = IngredientAmount.objects.filter(
-            recipe=self.lekker,
+            recipe=recipe,
             ingredient__in=ingredients
         )
         ingredient_amounts_serializer = IngredientAmountSerializer(ingredient_amounts, many=True)
