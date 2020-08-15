@@ -1,5 +1,6 @@
-from recipes.models import Recipe, IngredientAmount, Ingredient
+from recipes.models import Recipe, IngredientAmount
 from recipes.serializers import RecipeModelSerializer, RecipeSerializer, IngredientAmountSerializer
+from recipes.tests.helpers import get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients
 
 
@@ -26,12 +27,7 @@ class IngredientAmountSerializerTest(RecipeIngredients):
 
     def test_multiple_serializer(self):
         recipe = Recipe.objects.get(pk=self.lekker.pk)
-        ingredient_ids = [ingredient.pk for ingredient in recipe.ingredient_amounts.all()]
-        ingredients = Ingredient.objects.filter(pk__in=ingredient_ids)
-        ingredient_amounts = IngredientAmount.objects.filter(
-            recipe=recipe,
-            ingredient__in=ingredients
-        )
+        ingredient_amounts = get_ingredient_amounts(recipe)
         ingredient_amounts_serializer = IngredientAmountSerializer(ingredient_amounts, many=True)
         self.assertEqual(ingredient_amounts_serializer.data[1]['unit']['name'], 'piece')
 
@@ -39,12 +35,7 @@ class IngredientAmountSerializerTest(RecipeIngredients):
 class RecipeWithIngredientAmountsSerializerTest(RecipeIngredients):
     def test_serializer(self):
         recipe = Recipe.objects.get(pk=self.lekker.pk)
-        ingredient_ids = [ingredient.pk for ingredient in recipe.ingredient_amounts.all()]
-        ingredients = Ingredient.objects.filter(pk__in=ingredient_ids)
-        ingredient_amounts = IngredientAmount.objects.filter(
-            recipe=self.lekker,
-            ingredient__in=ingredients
-        )
+        ingredient_amounts = get_ingredient_amounts(recipe)
         recipe_with_ingredient_amounts = dict(recipe=recipe, ingredient_amounts=ingredient_amounts)
         serializer = RecipeSerializer(recipe_with_ingredient_amounts)
         self.assertEqual(serializer.data['recipe']['name'], 'Lekker')
