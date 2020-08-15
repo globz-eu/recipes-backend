@@ -1,5 +1,5 @@
 from django.test import TestCase
-from recipes.models import Recipe
+from recipes.models import Recipe, Ingredient, IngredientAmount
 from recipes.tests.models.setup import RecipeIngredients
 
 
@@ -48,4 +48,24 @@ class RecipeCreateTest(TestCase):
             ]
         }
         recipe = Recipe.recipes.create(**recipe_data)
-        self.assertEqual(recipe.name, 'Lekker')
+        self.assertEqual(recipe.name, recipe_data['recipe']['name'])
+        self.assertEqual(recipe.servings, recipe_data['recipe']['servings'])
+        self.assertEqual(recipe.instructions, recipe_data['recipe']['instructions'])
+        ingredient_ids = [ingredient.pk for ingredient in recipe.ingredient_amounts.all()]
+        ingredients = Ingredient.objects.filter(pk__in=ingredient_ids)
+        ingredient_amounts = IngredientAmount.objects.filter(
+            recipe=recipe,
+            ingredient__in=ingredients
+        )
+        self.assertEqual(
+            ingredient_amounts[0].ingredient.name,
+            recipe_data['ingredient_amounts'][0]['ingredient']['name']
+        )
+        self.assertEqual(
+            ingredient_amounts[0].unit.name,
+            recipe_data['ingredient_amounts'][0]['unit']['name']
+        )
+        self.assertEqual(
+            ingredient_amounts[0].quantity,
+            recipe_data['ingredient_amounts'][0]['quantity']
+        )
