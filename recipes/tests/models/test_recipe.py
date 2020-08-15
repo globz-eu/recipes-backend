@@ -2,7 +2,7 @@ import json
 from pathlib import Path, PurePath
 from django.test import TestCase
 from recipes.models import Recipe
-from recipes.tests.helpers import get_ingredient_amounts
+from recipes.helpers import get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients
 
 
@@ -20,6 +20,7 @@ class RecipeTest(RecipeIngredients):
 
 
 class RecipeCreateTest(TestCase):
+
     def test_recipe_create(self):
         recipe_data_file = Path(
             PurePath(
