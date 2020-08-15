@@ -19,7 +19,7 @@ class GetSingleRecipeTest(InitializeRecipes, Authenticate):
 
     def test_get_invalid_single_recipe(self):
         response = self.client.get(
-            reverse('recipe_detail', kwargs={'pk': 3}))
+            reverse('recipe_detail', kwargs={'pk': 3000}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
