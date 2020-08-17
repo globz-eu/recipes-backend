@@ -1,3 +1,4 @@
+from datetime import datetime
 from recipes.models import Recipe
 from recipes.serializers import RecipeModelSerializer, RecipeSerializer
 from recipes.tests.helpers import get_ingredient_amounts, get_recipe_data
@@ -12,7 +13,9 @@ class RecipeModelSerializerTest(RecipeIngredients):
         self.assertEqual(serializer.data['name'], recipe.name)
         self.assertEqual(serializer.data['servings'], recipe.servings)
         self.assertEqual(serializer.data['instructions'], recipe.instructions)
-        # self.assertEqual(serializer.data['created'], recipe.created)
+        created = datetime.strptime(serializer.data['created'], '%Y-%m-%dT%H:%M:%S.%fZ')
+        self.assertEqual(created.date(), recipe.created.date())
+        self.assertEqual(created.time(), recipe.created.time())
 
 
 class RecipeSerializerTest(RecipeIngredients):
