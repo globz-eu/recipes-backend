@@ -1,8 +1,6 @@
-import json
-from pathlib import Path, PurePath
 from django.test import TestCase
 from recipes.models import Recipe
-from recipes.tests.helpers import get_ingredient_amounts
+from recipes.tests.helpers import get_ingredient_amounts, get_recipe_data
 from recipes.tests.models.setup import RecipeIngredients
 
 
@@ -22,14 +20,7 @@ class RecipeTest(RecipeIngredients):
 class RecipeCreateTest(TestCase):
 
     def test_recipe_create(self):
-        recipe_data_file = Path(
-            PurePath(
-                Path(__file__).cwd()
-            ).joinpath(
-                'recipes/tests/data/recipe.json'
-            )
-        )
-        recipe_data = json.load(recipe_data_file.open())
+        recipe_data = get_recipe_data('lekker')
         recipe = Recipe.recipes.create(**recipe_data)
         self.assertEqual(recipe.name, recipe_data['recipe']['name'])
         self.assertEqual(recipe.servings, recipe_data['recipe']['servings'])
@@ -52,14 +43,7 @@ class RecipeCreateTest(TestCase):
 class RecipeGetTest(RecipeIngredients):
 
     def test_recipe_get(self):
-        recipe_data_file = Path(
-            PurePath(
-                Path(__file__).cwd()
-            ).joinpath(
-                'recipes/tests/data/recipe.json'
-            )
-        )
-        recipe_data = json.load(recipe_data_file.open())
+        recipe_data = get_recipe_data('lekker')
         recipe, ingredient_amounts = Recipe.recipes.get(pk=self.lekker.pk)
         self.assertEqual(recipe.name, recipe_data['recipe']['name'])
         self.assertEqual(

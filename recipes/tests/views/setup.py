@@ -1,23 +1,15 @@
-import json
 import os
-from pathlib import Path, PurePath
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from recipes.models import Recipe
+from recipes.tests.helpers import get_recipe_data
 
 
 class InitializeRecipes(APITestCase):
     """ Initialize 2 recipes """
 
     def setUp(self):
-        recipe_data_file = Path(
-            PurePath(
-                Path(__file__).cwd()
-            ).joinpath(
-                'recipes/tests/data/recipe.json'
-            )
-        )
-        recipe_data = json.load(recipe_data_file.open())
+        recipe_data = get_recipe_data('lekker')
         self.lekker = Recipe.recipes.create(**recipe_data)
         self.pas_mal = Recipe.objects.create(
             name='Pas mal',
