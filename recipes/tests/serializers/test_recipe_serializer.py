@@ -1,6 +1,6 @@
 from recipes.models import Recipe, IngredientAmount
 from recipes.serializers import RecipeModelSerializer, RecipeSerializer, IngredientAmountSerializer
-from recipes.helpers import get_ingredient_amounts
+from recipes.tests.helpers import get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients
 
 

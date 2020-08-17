@@ -1,4 +1,4 @@
-from recipes.helpers import get_ingredient_amounts
+from recipes.tests.helpers import get_ingredient_amounts
 from . import RecipeSerializer
 from .. import status, reverse, InitializeRecipes, Authenticate, Recipe
 
