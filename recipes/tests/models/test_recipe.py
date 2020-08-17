@@ -2,7 +2,7 @@ import json
 from pathlib import Path, PurePath
 from django.test import TestCase
 from recipes.models import Recipe
-from recipes.helpers import get_ingredient_amounts
+from recipes.tests.helpers import get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients
 
 
