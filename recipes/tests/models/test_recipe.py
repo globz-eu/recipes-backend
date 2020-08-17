@@ -47,3 +47,22 @@ class RecipeCreateTest(TestCase):
             ingredient_amounts[0].quantity,
             recipe_data['ingredient_amounts'][0]['quantity']
         )
+
+
+class RecipeGetTest(RecipeIngredients):
+
+    def test_recipe_get(self):
+        recipe_data_file = Path(
+            PurePath(
+                Path(__file__).cwd()
+            ).joinpath(
+                'recipes/tests/data/recipe.json'
+            )
+        )
+        recipe_data = json.load(recipe_data_file.open())
+        recipe, ingredient_amounts = Recipe.recipes.get(pk=self.lekker.pk)
+        self.assertEqual(recipe.name, recipe_data['recipe']['name'])
+        self.assertEqual(
+            ingredient_amounts[0].ingredient.name,
+            recipe_data['ingredient_amounts'][0]['ingredient']['name']
+        )

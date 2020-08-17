@@ -10,7 +10,17 @@ class Ingredient(models.Model):
         constraints = [models.UniqueConstraint(fields=['name'], name='unique_ingredient_name')]
 
 
-class RecipeManager(models.Manager):  # pylint: disable = too-few-public-methods
+class RecipeManager(models.Manager):
+    def get(self, **kwargs):
+        recipe = self.model.objects.get(**kwargs)
+        ingredient_ids = [ingredient.pk for ingredient in recipe.ingredient_amounts.all()]
+        ingredients = Ingredient.objects.filter(pk__in=ingredient_ids)
+        ingredient_amounts = IngredientAmount.objects.filter(
+            recipe=recipe,
+            ingredient__in=ingredients
+        )
+        return recipe, ingredient_amounts
+
     def create(self, recipe, ingredient_amounts):
         recipe = self.model(
             name=recipe['name'],
