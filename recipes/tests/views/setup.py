@@ -25,13 +25,3 @@ class Authenticate(APITestCase):
 
     def tearDown(self):
         self.client.force_authenticate(user=None) # pylint: disable=no-member
-
-
-class SetPayloads(APITestCase):
-    def setUp(self):
-        self.valid_payload = dict(name='Lekker', servings=3, instructions='Stir well')
-        self.invalid_payload = dict(
-            name='',
-            servings=2,
-            instructions='Servir sur un lit de choucroute'
-        )
