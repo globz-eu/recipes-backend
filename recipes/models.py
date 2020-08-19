@@ -21,26 +21,27 @@ class RecipeManager(models.Manager):
         )
         return recipe, ingredient_amounts
 
-    def create(self, recipe, ingredient_amounts):
+    def create(self, recipe, ingredient_amounts=None):
         recipe = self.model(
             name=recipe['name'],
             servings=recipe['servings'],
             instructions=recipe['instructions']
         )
         recipe.save()
-        for ingredient_amount in ingredient_amounts:
-            ingredient, _ = Ingredient.objects.get_or_create(
-                name=ingredient_amount['ingredient']['name'],
-                plural=ingredient_amount['ingredient']['plural']
-            )
-            unit, _ = Unit.objects.get_or_create(name=ingredient_amount['unit']['name'])
-            recipe.ingredient_amounts.add(
-                ingredient,
-                through_defaults={
-                    'unit': unit,
-                    'quantity': ingredient_amount['quantity']
-                }
-            )
+        if ingredient_amounts:
+            for ingredient_amount in ingredient_amounts:
+                ingredient, _ = Ingredient.objects.get_or_create(
+                    name=ingredient_amount['ingredient']['name'],
+                    plural=ingredient_amount['ingredient']['plural']
+                )
+                unit, _ = Unit.objects.get_or_create(name=ingredient_amount['unit']['name'])
+                recipe.ingredient_amounts.add(
+                    ingredient,
+                    through_defaults={
+                        'unit': unit,
+                        'quantity': ingredient_amount['quantity']
+                    }
+                )
         return recipe
 
 
