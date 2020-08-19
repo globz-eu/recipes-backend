@@ -31,7 +31,7 @@ class RecipeModelSerializer(ModelSerializer):
 
 class RecipeSerializer(Serializer):  # pylint: disable=abstract-method
     recipe = RecipeModelSerializer()
-    ingredient_amounts = IngredientAmountSerializer(many=True)
+    ingredient_amounts = IngredientAmountSerializer(many=True, required=False)
 
     def create(self, validated_data):
         return Recipe.recipes.create(**validated_data)
