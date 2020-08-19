@@ -38,7 +38,7 @@ class CreateNewRecipeUnauthenticatedTest(APITestCase):
 
     def setUp(self):
         self.recipe_data = get_recipe_data('lekker')
-    
+
     def test_create_valid_recipe(self):
         response = self.client.post(
             reverse('recipes'),
