@@ -24,6 +24,25 @@ class CreateNewRecipeTest(Authenticate):
             )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_create_valid_recipe_with_ingredients(self):
+        response = self.client.post(
+            reverse('recipes'),
+            data=json.dumps(self.recipe_data),
+            content_type='application/json'
+        )
+        for name, value in self.recipe_data['recipe'].items():
+            self.assertEqual(
+                response.data['recipe'][name],
+                value
+            )
+        for i, ingredient in enumerate(self.recipe_data['ingredient_amounts']):
+            for name, value in ingredient.items():
+                self.assertEqual(
+                    response.data['ingredient_amounts'][i][name],
+                    value
+                )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_create_invalid_recipe(self):
         response = self.client.post(
             reverse('recipes'),
