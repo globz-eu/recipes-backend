@@ -7,9 +7,10 @@ from recipes.tests.models.setup import RecipeIngredients
 
 class IngredientAmountSerializerTest(RecipeIngredients):
     def test_single_serializer(self):
+        ingredient_amounts = get_ingredient_amounts(self.lekker)
         ingredient_amount = IngredientAmount.objects.get(
             recipe=self.lekker,
-            ingredient=self.garlic
+            ingredient=ingredient_amounts[1].ingredient
         )
         serializer = IngredientAmountSerializer(ingredient_amount)
         self.assertEqual(serializer.data['unit']['name'], 'piece')
