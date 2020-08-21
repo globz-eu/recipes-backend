@@ -1,5 +1,5 @@
 from django.test import TestCase
-from recipes.models import Recipe
+from recipes.models import Recipe, IngredientAmount
 from recipes.tests.helpers import get_ingredient_amounts, get_recipe_data
 from recipes.tests.models.setup import RecipeIngredients
 
@@ -7,14 +7,22 @@ from recipes.tests.models.setup import RecipeIngredients
 class RecipeTest(RecipeIngredients):
 
     def test_db_fields(self):
-        expected_ingredients = ['aubergine', 'garlic']
-        lekker = Recipe.objects.get(name='Lekker')
-        ingredients = lekker.ingredient_amounts.all()
-        self.assertEqual(lekker.name, 'Lekker')
-        self.assertEqual(lekker.instructions, 'Stir well')
-        self.assertEqual(lekker.servings, 3)
-        for i, ingredient in enumerate(ingredients):
-            self.assertEqual(ingredient.name, expected_ingredients[i])
+        recipe_data = get_recipe_data('lekker')
+        ingredient_set = self.lekker.ingredient_set.all()
+        for name, value in recipe_data['recipe'].items():
+            self.assertEqual(
+                getattr(self.lekker, name),
+                value
+            )
+        for i, ingredient in enumerate(recipe_data['ingredients']):
+            for name, value in ingredient['ingredient'].items():
+                self.assertEqual(getattr(ingredient_set[i], name), value)
+            ingredient_amount = IngredientAmount.objects.select_related('unit').get(
+                recipe=self.lekker,
+                ingredient=ingredient_set[i]
+            )
+            self.assertEqual(ingredient_amount.unit.name, ingredient['amount']['unit']['name'])
+            self.assertEqual(ingredient_amount.quantity, ingredient['amount']['quantity'])
 
 
 class RecipeCreateTest(TestCase):

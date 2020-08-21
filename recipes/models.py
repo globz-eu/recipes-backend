@@ -1,15 +1,6 @@
 from django.db import models
 
 
-class Ingredient(models.Model):
-    name = models.CharField(max_length=100)
-    plural = models.CharField(max_length=100)
-
-    class Meta:
-        ordering = ['name']
-        constraints = [models.UniqueConstraint(fields=['name'], name='unique_ingredient_name')]
-
-
 class RecipeManager(models.Manager):
     def get(self, **kwargs):
         recipe = self.model.objects.get(**kwargs)
@@ -21,28 +12,28 @@ class RecipeManager(models.Manager):
         )
         return recipe, ingredient_amounts
 
-    def create(self, recipe, ingredient_amounts=None):
-        recipe = self.model(
+    def create(self, recipe, ingredients=None):
+        new_recipe = self.model(
             name=recipe['name'],
             servings=recipe['servings'],
             instructions=recipe['instructions']
         )
-        recipe.save()
-        if ingredient_amounts:
-            for ingredient_amount in ingredient_amounts:
-                ingredient, _ = Ingredient.objects.get_or_create(
-                    name=ingredient_amount['ingredient']['name'],
-                    plural=ingredient_amount['ingredient']['plural']
+        new_recipe.save()
+        if ingredients:
+            for ingredient in ingredients:
+                ingredient_object, _ = Ingredient.objects.get_or_create(
+                    name=ingredient['ingredient']['name'],
+                    plural=ingredient['ingredient']['plural']
                 )
-                unit, _ = Unit.objects.get_or_create(name=ingredient_amount['unit']['name'])
-                recipe.ingredient_amounts.add(
-                    ingredient,
+                unit, _ = Unit.objects.get_or_create(name=ingredient['amount']['unit']['name'])
+                ingredient_object.recipes.add(
+                    new_recipe,
                     through_defaults={
                         'unit': unit,
-                        'quantity': ingredient_amount['quantity']
+                        'quantity': ingredient['amount']['quantity']
                     }
                 )
-        return recipe
+        return new_recipe
 
 
 class Recipe(models.Model):
@@ -50,13 +41,23 @@ class Recipe(models.Model):
     name = models.CharField(max_length=100)
     servings = models.PositiveSmallIntegerField(default=4)
     instructions = models.TextField(max_length=1000)
-    ingredient_amounts = models.ManyToManyField(Ingredient, through='IngredientAmount')
+
     objects = models.Manager()
     recipes = RecipeManager()
 
     class Meta:
         ordering = ['name']
         constraints = [models.UniqueConstraint(fields=['name'], name='unique_recipe_name')]
+
+
+class Ingredient(models.Model):
+    name = models.CharField(max_length=100)
+    plural = models.CharField(max_length=100)
+    recipes = models.ManyToManyField(Recipe, through='IngredientAmount')
+
+    class Meta:
+        ordering = ['name']
+        constraints = [models.UniqueConstraint(fields=['name'], name='unique_ingredient_name')]
 
 
 class Unit(models.Model):

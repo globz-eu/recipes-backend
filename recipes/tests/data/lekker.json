@@ -4,26 +4,30 @@
     "servings": 3,
     "instructions": "Stir well"
   },
-  "ingredient_amounts": [
+  "ingredients": [
     {
       "ingredient": {
         "name": "aubergine",
         "plural": "aubergines"
       },
-      "unit": {
-        "name":"piece"
-      },
-      "quantity": 2
+      "amount": {
+        "unit": {
+          "name":"piece"
+        },
+        "quantity": 2
+      }
     },
     {
       "ingredient": {
         "name": "garlic",
         "plural":"garlic"
       },
-      "unit": {
-        "name": "piece"
-      },
-      "quantity": 1
+      "amount": {
+        "unit": {
+          "name": "piece"
+        },
+        "quantity": 1
+      }
     }
   ]
 }
