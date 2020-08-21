@@ -1,6 +1,6 @@
 from django.test import TestCase
 from recipes.models import Recipe, IngredientAmount
-from recipes.tests.helpers import get_ingredient_amounts, get_recipe_data
+from recipes.tests.helpers import get_recipe_data
 from recipes.tests.models.setup import RecipeIngredients
 
 
