@@ -4,13 +4,12 @@ from django.db import models
 class RecipeManager(models.Manager):
     def get(self, **kwargs):
         recipe = self.model.objects.get(**kwargs)
-        ingredient_ids = [ingredient.pk for ingredient in recipe.ingredient_amounts.all()]
-        ingredients = Ingredient.objects.filter(pk__in=ingredient_ids)
-        ingredient_amounts = IngredientAmount.objects.filter(
+        ingredient_set = recipe.ingredient_set.all()
+        ingredients = IngredientAmount.objects.filter(
             recipe=recipe,
-            ingredient__in=ingredients
-        )
-        return recipe, ingredient_amounts
+            ingredient__in=ingredient_set
+        ).select_related('unit', 'ingredient')
+        return recipe, ingredients
 
     def create(self, recipe, ingredients=None):
         new_recipe = self.model(
