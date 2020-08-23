@@ -8,7 +8,7 @@ class RecipeManager(models.Manager):
         ingredients = IngredientAmount.objects.filter(
             recipe=recipe,
             ingredient__in=ingredient_set
-        ).select_related('unit', 'ingredient')
+        ).order_by('ingredient').select_related('amount', 'ingredient')
         return recipe, ingredients
 
     def create(self, recipe, ingredients=None):
@@ -25,11 +25,14 @@ class RecipeManager(models.Manager):
                     plural=ingredient['ingredient']['plural']
                 )
                 unit, _ = Unit.objects.get_or_create(name=ingredient['amount']['unit']['name'])
+                amount, _ = Amount.objects.get_or_create(
+                    quantity=ingredient['amount']['quantity'],
+                    unit=unit
+                )
                 ingredient_object.recipes.add(
                     new_recipe,
                     through_defaults={
-                        'unit': unit,
-                        'quantity': ingredient['amount']['quantity']
+                        'amount': amount
                     }
                 )
         return new_recipe
@@ -67,8 +70,12 @@ class Unit(models.Model):
         constraints = [models.UniqueConstraint(fields=['name'], name='unique_unit_name')]
 
 
+class Amount(models.Model):
+    quantity = models.DecimalField(max_digits=4, decimal_places=2)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+
+
 class IngredientAmount(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=4, decimal_places=2)
+    amount = models.ForeignKey(Amount, on_delete=models.CASCADE, default=None)

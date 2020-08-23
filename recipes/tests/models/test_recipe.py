@@ -31,12 +31,15 @@ class RecipeCreateTest(TestCase):
         for i, ingredient in enumerate(recipe_data['ingredients']):
             for name, value in ingredient['ingredient'].items():
                 self.assertEqual(getattr(ingredient_set[i], name), value)
-            ingredient_amount = IngredientAmount.objects.select_related('unit').get(
+            ingredient_amount = IngredientAmount.objects.select_related('amount').get(
                 recipe=recipe,
                 ingredient=ingredient_set[i]
             )
-            self.assertEqual(ingredient_amount.unit.name, ingredient['amount']['unit']['name'])
-            self.assertEqual(ingredient_amount.quantity, ingredient['amount']['quantity'])
+            self.assertEqual(
+                ingredient_amount.amount.unit.name,
+                ingredient['amount']['unit']['name']
+            )
+            self.assertEqual(ingredient_amount.amount.quantity, ingredient['amount']['quantity'])
 
 
 class RecipeGetTest(RecipeIngredients):
@@ -52,5 +55,5 @@ class RecipeGetTest(RecipeIngredients):
         for i, ingredient in enumerate(recipe_data['ingredients']):
             for name, value in ingredient['ingredient'].items():
                 self.assertEqual(getattr(ingredients[i].ingredient, name), value)
-            self.assertEqual(ingredients[i].unit.name, ingredient['amount']['unit']['name'])
-            self.assertEqual(ingredients[i].quantity, ingredient['amount']['quantity'])
+            self.assertEqual(ingredients[i].amount.unit.name, ingredient['amount']['unit']['name'])
+            self.assertEqual(ingredients[i].amount.quantity, ingredient['amount']['quantity'])
