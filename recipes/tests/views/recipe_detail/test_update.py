@@ -1,7 +1,7 @@
 import json
+from recipes.serializers import RecipeModelSerializer
 from recipes.tests.helpers import get_recipe_data
 from recipes.tests.views import status, reverse, InitializeRecipes, Authenticate, Recipe
-from . import RecipeModelSerializer
 
 
 class UpdateSingleRecipeTest(InitializeRecipes, Authenticate):

@@ -35,10 +35,10 @@ class CreateNewRecipeTest(Authenticate):
                 response.data['recipe'][name],
                 value
             )
-        for i, ingredient in enumerate(self.recipe_data['ingredient_amounts']):
+        for i, ingredient in enumerate(self.recipe_data['ingredients']):
             for name, value in ingredient.items():
                 self.assertEqual(
-                    response.data['ingredient_amounts'][i][name],
+                    response.data['ingredients'][i][name],
                     value
                 )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
