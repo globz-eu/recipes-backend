@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, Serializer
-from recipes.models import Recipe, IngredientAmount, Ingredient, Unit
+from recipes.models import Recipe, IngredientAmount, Ingredient, Unit, Amount
 
 
 class IngredientSerializer(ModelSerializer):
@@ -13,14 +13,21 @@ class UnitSerializer(ModelSerializer):
         model = Unit
         fields = ['id', 'name']
 
-
-class IngredientAmountSerializer(ModelSerializer):
-    ingredient = IngredientSerializer()
+class AmountSerializer(ModelSerializer):
     unit = UnitSerializer()
 
     class Meta:
+        model = Amount
+        fields = ['quantity', 'unit']
+
+
+class IngredientAmountSerializer(ModelSerializer):
+    ingredient = IngredientSerializer()
+    amount = AmountSerializer()
+
+    class Meta:
         model = IngredientAmount
-        fields = ['ingredient', 'unit', 'quantity']
+        fields = ['ingredient', 'amount']
 
 
 class RecipeModelSerializer(ModelSerializer):
@@ -31,10 +38,13 @@ class RecipeModelSerializer(ModelSerializer):
 
 class RecipeSerializer(Serializer):  # pylint: disable=abstract-method
     recipe = RecipeModelSerializer()
-    ingredient_amounts = IngredientAmountSerializer(many=True, required=False)
+    ingredients = IngredientAmountSerializer(many=True, required=False)
 
     def create(self, validated_data):
         return Recipe.recipes.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        return Recipe.recipes.update(instance, **validated_data)
 
 
 class RecipeListSerializer(ModelSerializer):
