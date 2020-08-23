@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.test import TestCase
 from recipes.models import Recipe, IngredientAmount
 from recipes.tests.helpers import get_recipe_data
@@ -13,16 +14,7 @@ class RecipeTest(RecipeIngredients):
                 getattr(self.lekker, name),
                 value
             )
-        ingredient_set = self.lekker.ingredient_set.all()
-        for i, ingredient in enumerate(recipe_data['ingredients']):
-            for name, value in ingredient['ingredient'].items():
-                self.assertEqual(getattr(ingredient_set[i], name), value)
-            ingredient_amount = IngredientAmount.objects.select_related('unit').get(
-                recipe=self.lekker,
-                ingredient=ingredient_set[i]
-            )
-            self.assertEqual(ingredient_amount.unit.name, ingredient['amount']['unit']['name'])
-            self.assertEqual(ingredient_amount.quantity, ingredient['amount']['quantity'])
+        self.assertIsInstance(self.lekker.created, datetime)
 
 
 class RecipeCreateTest(TestCase):
