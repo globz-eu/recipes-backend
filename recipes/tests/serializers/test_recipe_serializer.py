@@ -171,7 +171,6 @@ class RecipeSerializerTest(RecipeIngredients):
                 ingredient=ingredient
             ) for ingredient in ingredient_set
         ]
-        print([ingredient.ingredient.name for ingredient in ingredient_amounts])
         for name, value in recipe_data['recipe'].items():
             self.assertEqual(
                 getattr(recipe, name),
