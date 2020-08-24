@@ -1,23 +1,18 @@
 from datetime import datetime
-from django.test import TestCase
 from recipes.models import Recipe, IngredientAmount
 from recipes.tests.helpers import get_recipe_data
-from recipes.tests.models.setup import RecipeIngredients
+from recipes.tests.models.setup import RecipeIngredients, RecipeCompare
 
 
 class RecipeTest(RecipeIngredients):
 
     def test_db_fields(self):
         recipe_data = get_recipe_data('lekker')
-        for name, value in recipe_data['recipe'].items():
-            self.assertEqual(
-                getattr(self.lekker, name),
-                value
-            )
+        self.compare_object_values(self.lekker, recipe_data['recipe'])
         self.assertIsInstance(self.lekker.created, datetime)
 
 
-class RecipeCreateTest(TestCase):
+class RecipeCreateTest(RecipeCompare):
 
     def test_recipe_create(self):
         recipe_data = get_recipe_data('lekker')
@@ -28,18 +23,14 @@ class RecipeCreateTest(TestCase):
                 value
             )
         ingredient_set = recipe.ingredient_set.all()
-        for i, ingredient in enumerate(recipe_data['ingredients']):
-            for name, value in ingredient['ingredient'].items():
-                self.assertEqual(getattr(ingredient_set[i], name), value)
-            ingredient_amount = IngredientAmount.objects.select_related('amount').get(
+        ingredient_amounts = [
+            IngredientAmount.objects.select_related('amount').get(
                 recipe=recipe,
-                ingredient=ingredient_set[i]
-            )
-            self.assertEqual(
-                ingredient_amount.amount.unit.name,
-                ingredient['amount']['unit']['name']
-            )
-            self.assertEqual(ingredient_amount.amount.quantity, ingredient['amount']['quantity'])
+                ingredient=ingredient
+            ) for ingredient in ingredient_set
+        ]
+        for i, ingredient in enumerate(recipe_data['ingredients']):
+            self.compare_object_values(ingredient_amounts[i], ingredient)
 
 
 class RecipeGetTest(RecipeIngredients):
@@ -47,13 +38,6 @@ class RecipeGetTest(RecipeIngredients):
     def test_recipe_get(self):
         recipe_data = get_recipe_data('lekker')
         recipe, ingredients = Recipe.recipes.get(pk=self.lekker.pk)
-        for name, value in recipe_data['recipe'].items():
-            self.assertEqual(
-                getattr(recipe, name),
-                value
-            )
+        self.compare_object_values(recipe, recipe_data['recipe'])
         for i, ingredient in enumerate(recipe_data['ingredients']):
-            for name, value in ingredient['ingredient'].items():
-                self.assertEqual(getattr(ingredients[i].ingredient, name), value)
-            self.assertEqual(ingredients[i].amount.unit.name, ingredient['amount']['unit']['name'])
-            self.assertEqual(ingredients[i].amount.quantity, ingredient['amount']['quantity'])
+            self.compare_object_values(ingredients[i], ingredient)
