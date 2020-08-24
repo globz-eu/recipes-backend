@@ -64,8 +64,8 @@ class RecipeSerializerTest(RecipeIngredients):
 
     def test_serializer_update_recipe_ingredients(self):
         recipe_data = get_recipe_data('lekker')
-        recipe_data['ingredients'][0]['ingredient']['name'] = "zucchino"
-        recipe_data['ingredients'][0]['ingredient']['plural'] = "zucchini"
+        recipe_data['ingredients'][1]['ingredient']['name'] = "onion"
+        recipe_data['ingredients'][1]['ingredient']['plural'] = "onions"
         recipe, _ = Recipe.recipes.get(pk=self.lekker.pk)
         serializer = RecipeSerializer(recipe, data=recipe_data)
         self.assertTrue(serializer.is_valid())
