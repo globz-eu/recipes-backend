@@ -37,6 +37,28 @@ class RecipeManager(models.Manager):
                 )
         return new_recipe
 
+    def update(self, instance, recipe, ingredients=None):  # pylint: disable=no-self-use
+        instance.name = recipe['name']
+        instance.servings = recipe['servings']
+        instance.instructions = recipe['instructions']
+        instance.save()
+
+        if ingredients:
+            instance.ingredient_set.clear()
+            for ingredient in ingredients:
+                ingredient_object, _ = Ingredient.objects.update_or_create(
+                    name=ingredient['ingredient']['name'],
+                    plural=ingredient['ingredient']['plural']
+                )
+                unit, _ = Unit.objects.update_or_create(name=ingredient['amount']['unit']['name'])
+                amount, _ = Amount.objects.update_or_create(
+                    quantity=ingredient['amount']['quantity'],
+                    unit=unit
+                )
+                instance.ingredient_set.add(ingredient_object, through_defaults={'amount': amount})
+
+        return instance
+
 
 class Recipe(models.Model):
     created = models.DateTimeField(auto_now_add=True)
