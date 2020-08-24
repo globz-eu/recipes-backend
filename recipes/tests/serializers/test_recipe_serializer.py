@@ -1,14 +1,13 @@
 from datetime import datetime
-from recipes.models import Recipe, IngredientAmount
+from recipes.models import Recipe
 from recipes.serializers import RecipeModelSerializer, RecipeSerializer
-from recipes.tests.helpers import get_recipe_data
+from recipes.tests.helpers import get_recipe_data, get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients
 
 
 class RecipeModelSerializerTest(RecipeIngredients):
     def test_serializer(self):
         recipe_data = get_recipe_data('lekker')
-
         recipe = Recipe.objects.get(pk=self.lekker.pk)
         serializer = RecipeModelSerializer(recipe)
         self.assertEqual(serializer.data['id'], recipe.pk)
@@ -26,6 +25,7 @@ class RecipeSerializerTest(RecipeIngredients):
         self.assertEqual(serializer.data['recipe']['id'], self.lekker.pk)
         self.compare_values(serializer.data['recipe'], recipe_data['recipe'])
         for i, ingredient in enumerate(recipe_data['ingredients']):
+            self.compare_values(serializer.data['ingredients'][i], ingredient)
             self.assertEqual(
                 serializer.data['ingredients'][i]['ingredient']['id'],
                 ingredient_amounts[i].ingredient.id
@@ -34,13 +34,10 @@ class RecipeSerializerTest(RecipeIngredients):
                 serializer.data['ingredients'][i]['amount']['unit']['id'],
                 ingredient_amounts[i].amount.unit.id
             )
-            self.compare_values(serializer.data['ingredients'][i], ingredient)
 
     def test_data_serializer(self):
         recipe_data = get_recipe_data('frozen_pizza')
-        serializer = RecipeSerializer(
-            data=recipe_data
-        )
+        serializer = RecipeSerializer(data=recipe_data)
         self.assertTrue(serializer.is_valid())
         self.compare_values(serializer.validated_data['recipe'], recipe_data['recipe'])
         for i, ingredient in enumerate(recipe_data['ingredients']):
@@ -48,18 +45,10 @@ class RecipeSerializerTest(RecipeIngredients):
 
     def test_serializer_create(self):
         recipe_data = get_recipe_data('frozen_pizza')
-        serializer = RecipeSerializer(
-            data=recipe_data
-        )
+        serializer = RecipeSerializer(data=recipe_data)
         self.assertTrue(serializer.is_valid())
         recipe = serializer.save()
-        ingredient_set = recipe.ingredient_set.all()
-        ingredient_amounts = [
-            IngredientAmount.objects.select_related('amount').get(
-                recipe=recipe,
-                ingredient=ingredient
-            ) for ingredient in ingredient_set
-        ]
+        ingredient_amounts = get_ingredient_amounts(recipe)
         self.compare_object_values(recipe, recipe_data['recipe'])
         for i, ingredient in enumerate(recipe_data['ingredients']):
             self.compare_object_values(ingredient_amounts[i], ingredient)
@@ -68,10 +57,7 @@ class RecipeSerializerTest(RecipeIngredients):
         recipe_data = get_recipe_data('lekker')
         recipe_data['recipe']['instructions'] = "Stir well for 20 minutes"
         recipe, _ = Recipe.recipes.get(pk=self.lekker.pk)
-        serializer = RecipeSerializer(
-            recipe,
-            data=recipe_data
-        )
+        serializer = RecipeSerializer(recipe, data=recipe_data)
         self.assertTrue(serializer.is_valid())
         recipe = serializer.save()
         self.compare_object_values(recipe, recipe_data['recipe'])
@@ -81,26 +67,10 @@ class RecipeSerializerTest(RecipeIngredients):
         recipe_data['ingredients'][0]['ingredient']['name'] = "zucchino"
         recipe_data['ingredients'][0]['ingredient']['plural'] = "zucchini"
         recipe, _ = Recipe.recipes.get(pk=self.lekker.pk)
-        serializer = RecipeSerializer(
-            recipe,
-            data=recipe_data
-        )
+        serializer = RecipeSerializer(recipe, data=recipe_data)
         self.assertTrue(serializer.is_valid())
         recipe = serializer.save()
-        ingredient_set = self.lekker.ingredient_set.all()
-        ingredient_amounts = [
-            IngredientAmount.objects.select_related('amount').get(
-                recipe=self.lekker,
-                ingredient=ingredient
-            ) for ingredient in ingredient_set
-        ]
-        ingredient_set = recipe.ingredient_set.all()
-        ingredient_amounts = [
-            IngredientAmount.objects.select_related('amount').get(
-                recipe=recipe,
-                ingredient=ingredient
-            ) for ingredient in ingredient_set
-        ]
+        ingredient_amounts = get_ingredient_amounts(recipe)
         self.compare_object_values(recipe, recipe_data['recipe'])
         for i, ingredient in enumerate(recipe_data['ingredients']):
             self.compare_object_values(ingredient_amounts[i], ingredient)
