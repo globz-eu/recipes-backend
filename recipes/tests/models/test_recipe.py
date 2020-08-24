@@ -1,6 +1,6 @@
 from datetime import datetime
-from recipes.models import Recipe, IngredientAmount
-from recipes.tests.helpers import get_recipe_data
+from recipes.models import Recipe
+from recipes.tests.helpers import get_recipe_data, get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients, RecipeCompare
 
 
@@ -22,13 +22,7 @@ class RecipeCreateTest(RecipeCompare):
                 getattr(recipe, name),
                 value
             )
-        ingredient_set = recipe.ingredient_set.all()
-        ingredient_amounts = [
-            IngredientAmount.objects.select_related('amount').get(
-                recipe=recipe,
-                ingredient=ingredient
-            ) for ingredient in ingredient_set
-        ]
+        ingredient_amounts = get_ingredient_amounts(recipe)
         for i, ingredient in enumerate(recipe_data['ingredients']):
             self.compare_object_values(ingredient_amounts[i], ingredient)
 
