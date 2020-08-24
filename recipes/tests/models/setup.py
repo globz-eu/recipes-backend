@@ -4,11 +4,7 @@ from recipes.models import Recipe
 from recipes.tests.helpers import get_recipe_data
 
 
-class RecipeIngredients(TestCase):
-
-    def setUp(self):
-        recipe_data = get_recipe_data('lekker')
-        self.lekker = Recipe.recipes.create(**recipe_data)
+class RecipeCompare(TestCase):
 
     def compare_values(self, returned, expected):
         for name, value in expected.items():
@@ -27,3 +23,10 @@ class RecipeIngredients(TestCase):
                 self.assertEqual(int(Decimal(getattr(returned, name))), value)
             else:
                 self.assertEqual(getattr(returned, name), value)
+
+
+class RecipeIngredients(RecipeCompare):
+
+    def setUp(self):
+        recipe_data = get_recipe_data('lekker')
+        self.lekker = Recipe.recipes.create(**recipe_data)

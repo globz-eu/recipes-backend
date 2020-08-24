@@ -1,5 +1,4 @@
 from datetime import datetime
-from decimal import Decimal
 from recipes.models import Recipe, IngredientAmount
 from recipes.serializers import RecipeModelSerializer, RecipeSerializer
 from recipes.tests.helpers import get_recipe_data
@@ -54,10 +53,10 @@ class RecipeSerializerTest(RecipeIngredients):
         )
         self.assertTrue(serializer.is_valid())
         recipe = serializer.save()
-        ingredient_set = self.lekker.ingredient_set.all()
+        ingredient_set = recipe.ingredient_set.all()
         ingredient_amounts = [
             IngredientAmount.objects.select_related('amount').get(
-                recipe=self.lekker,
+                recipe=recipe,
                 ingredient=ingredient
             ) for ingredient in ingredient_set
         ]
@@ -75,30 +74,7 @@ class RecipeSerializerTest(RecipeIngredients):
         )
         self.assertTrue(serializer.is_valid())
         recipe = serializer.save()
-        ingredient_set = self.lekker.ingredient_set.all()
-        ingredient_amounts = [
-            IngredientAmount.objects.select_related('amount').get(
-                recipe=self.lekker,
-                ingredient=ingredient
-            ) for ingredient in ingredient_set
-        ]
-        for name, value in recipe_data['recipe'].items():
-            self.assertEqual(
-                getattr(recipe, name),
-                value
-            )
-        for i, ingredient in enumerate(recipe_data['ingredient_amounts']):
-            for name, value in ingredient.items():
-                if isinstance(value, dict):
-                    for nested_name, nested_value in value.items():
-                        self.assertEqual(
-                            getattr(getattr(ingredient_amounts[i], name), nested_name),
-                            nested_value
-                        )
-                elif isinstance(value, int):
-                    self.assertEqual(getattr(ingredient_amounts[i], name), Decimal(value))
-                else:
-                    self.assertEqual(getattr(ingredient_amounts[i], name), value)
+        self.compare_object_values(recipe, recipe_data['recipe'])
 
     def test_serializer_update_recipe_ingredients(self):
         recipe_data = get_recipe_data('lekker')
@@ -118,20 +94,13 @@ class RecipeSerializerTest(RecipeIngredients):
                 ingredient=ingredient
             ) for ingredient in ingredient_set
         ]
-        for name, value in recipe_data['recipe'].items():
-            self.assertEqual(
-                getattr(recipe, name),
-                value
-            )
-        for i, ingredient in enumerate(recipe_data['ingredient_amounts']):
-            for name, value in ingredient.items():
-                if isinstance(value, dict):
-                    for nested_name, nested_value in value.items():
-                        self.assertEqual(
-                            getattr(getattr(ingredient_amounts[i], name), nested_name),
-                            nested_value
-                        )
-                elif isinstance(value, int):
-                    self.assertEqual(getattr(ingredient_amounts[i], name), Decimal(value))
-                else:
-                    self.assertEqual(getattr(ingredient_amounts[i], name), value)
+        ingredient_set = recipe.ingredient_set.all()
+        ingredient_amounts = [
+            IngredientAmount.objects.select_related('amount').get(
+                recipe=recipe,
+                ingredient=ingredient
+            ) for ingredient in ingredient_set
+        ]
+        self.compare_object_values(recipe, recipe_data['recipe'])
+        for i, ingredient in enumerate(recipe_data['ingredients']):
+            self.compare_object_values(ingredient_amounts[i], ingredient)
