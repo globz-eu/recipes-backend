@@ -17,11 +17,7 @@ class RecipeCreateTest(RecipeCompare):
     def test_recipe_create(self):
         recipe_data = get_recipe_data('lekker')
         recipe = Recipe.recipes.create(**recipe_data)
-        for name, value in recipe_data['recipe'].items():
-            self.assertEqual(
-                getattr(recipe, name),
-                value
-            )
+        self.compare_object_values(recipe, recipe_data['recipe'])
         ingredient_amounts = get_ingredient_amounts(recipe)
         for i, ingredient in enumerate(recipe_data['ingredients']):
             self.compare_object_values(ingredient_amounts[i], ingredient)
