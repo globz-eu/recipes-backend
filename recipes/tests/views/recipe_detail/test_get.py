@@ -1,5 +1,4 @@
 from recipes.serializers import RecipeSerializer
-from recipes.models import IngredientAmount
 from recipes.tests.helpers import get_ingredient_amounts
 from recipes.tests.views import status, reverse, InitializeRecipes, Authenticate, Recipe
 
