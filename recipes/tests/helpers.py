@@ -21,3 +21,17 @@ def get_ingredient_amounts(recipe):
             ingredient=ingredient
         ) for ingredient in recipe.ingredient_set.all()
     ]
+
+
+def check_values(returned, expected, assertion, returned_is_object=False):
+    for name, value in expected.items():
+        if returned_is_object:
+            if isinstance(value, dict):
+                check_values(getattr(returned, name), value, assertion, returned_is_object=True)
+            else:
+                assertion(getattr(returned, name), value)
+        else:
+            if isinstance(value, dict):
+                check_values(returned[name], value, assertion)
+            else:
+                assertion(returned[name], value)
