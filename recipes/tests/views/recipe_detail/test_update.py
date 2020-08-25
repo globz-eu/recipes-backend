@@ -11,6 +11,10 @@ class UpdateSingleRecipeTest(InitializeRecipes, Authenticate):
         InitializeRecipes.setUp(self)
         Authenticate.setUp(self)
         self.recipe_data = get_recipe_data('lekker')
+        self.recipe_data['recipe']['instructions'] = "Stir well for 20 minutes"
+        self.recipe_data['ingredients'][1]['ingredient']['name'] = "onion"
+        self.recipe_data['ingredients'][1]['ingredient']['plural'] = "onions"
+        self.recipe_data['ingredients'][0]['amount']['quantity'] = 3
 
     def test_valid_update_recipe(self):
         response = self.client.put(
@@ -37,6 +41,10 @@ class UpdateSingleRecipeUnauthenticatedTest(InitializeRecipes):
     def setUp(self):
         InitializeRecipes.setUp(self)
         self.recipe_data = get_recipe_data('lekker')
+        self.recipe_data['recipe']['instructions'] = "Stir well for 20 minutes"
+        self.recipe_data['ingredients'][1]['ingredient']['name'] = "onion"
+        self.recipe_data['ingredients'][1]['ingredient']['plural'] = "onions"
+        self.recipe_data['ingredients'][0]['amount']['quantity'] = 3
 
     def test_valid_update_recipe(self):
         response = self.client.put(
