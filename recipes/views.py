@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from recipes.models import Recipe
-from recipes.serializers import RecipeSerializer, RecipeModelSerializer, RecipeListSerializer
+from recipes.serializers import RecipeSerializer, RecipeListSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -30,20 +30,19 @@ def recipe_detail(request, pk, format=None):  # pylint: disable=redefined-builti
     Retrieve, update or delete a recipe.
     """
     try:
-        recipe = Recipe.objects.get(pk=pk)
+        recipe, ingredient_amounts = Recipe.recipes.get(pk=pk)
     except Recipe.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        recipe, ingredient_amounts = Recipe.recipes.get(pk=pk)
         serializer = RecipeSerializer(dict(recipe=recipe, ingredient_amounts=ingredient_amounts))
         return Response(serializer.data)
 
     if request.method == 'PUT':
-        serializer = RecipeModelSerializer(recipe, data=request.data)
+        serializer = RecipeSerializer(recipe, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.validated_data, status=status.HTTP_204_NO_CONTENT)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'DELETE':

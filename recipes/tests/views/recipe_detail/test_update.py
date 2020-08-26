@@ -1,7 +1,7 @@
 import json
-from recipes.serializers import RecipeModelSerializer
+from recipes.models import Recipe
 from recipes.tests.helpers import get_recipe_data
-from recipes.tests.views import status, reverse, InitializeRecipes, Authenticate, Recipe
+from recipes.tests.views import status, reverse, InitializeRecipes, Authenticate
 
 
 class UpdateSingleRecipeTest(InitializeRecipes, Authenticate):
@@ -19,17 +19,28 @@ class UpdateSingleRecipeTest(InitializeRecipes, Authenticate):
     def test_valid_update_recipe(self):
         response = self.client.put(
             reverse('recipe_detail', kwargs={'pk': self.lekker.pk}),
-            data=json.dumps(self.recipe_data['recipe']),
+            data=json.dumps(self.recipe_data),
             content_type='application/json'
         )
-        recipe = Recipe.objects.get(pk=self.lekker.pk)
-        serializer = RecipeModelSerializer(recipe)
-        self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.compare_values(response.data['recipe'], self.recipe_data['recipe'])
+        for i, ingredient in enumerate(self.recipe_data['ingredients']):
+            self.compare_values(response.data['ingredients'][i], ingredient)
+
+    def test_updates_recipe_in_database(self):
+        self.client.put(
+            reverse('recipe_detail', kwargs={'pk': self.lekker.pk}),
+            data=json.dumps(self.recipe_data),
+            content_type='application/json'
+        )
+        recipe, ingredient_amounts = Recipe.recipes.get(pk=self.lekker.pk)
+        self.compare_object_values(recipe, self.recipe_data['recipe'])
+        for i, ingredient in enumerate(self.recipe_data['ingredients']):
+            self.compare_object_values(ingredient_amounts[i], ingredient)
 
     def test_invalid_update_recipe(self):
         response = self.client.put(
-            reverse('recipe_detail', kwargs={'pk': self.pas_mal.pk}),
+            reverse('recipe_detail', kwargs={'pk': self.lekker.pk}),
             data=json.dumps({}),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -56,7 +67,7 @@ class UpdateSingleRecipeUnauthenticatedTest(InitializeRecipes):
 
     def test_invalid_update_recipe(self):
         response = self.client.put(
-            reverse('recipe_detail', kwargs={'pk': self.pas_mal.pk}),
+            reverse('recipe_detail', kwargs={'pk': self.lekker.pk}),
             data=json.dumps({}),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

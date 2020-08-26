@@ -17,8 +17,8 @@ class CreateNewRecipeTest(Authenticate):
             data=json.dumps(dict(recipe=self.recipe_data['recipe'])),
             content_type='application/json'
         )
-        self.compare_values(response.data['recipe'], self.recipe_data['recipe'])
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.compare_values(response.data['recipe'], self.recipe_data['recipe'])
 
     def test_create_valid_recipe_with_ingredients(self):
         response = self.client.post(
@@ -26,10 +26,10 @@ class CreateNewRecipeTest(Authenticate):
             data=json.dumps(self.recipe_data),
             content_type='application/json'
         )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.compare_values(response.data['recipe'], self.recipe_data['recipe'])
         for i, ingredient in enumerate(self.recipe_data['ingredients']):
             self.compare_values(response.data['ingredients'][i], ingredient)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_recipe(self):
         response = self.client.post(
