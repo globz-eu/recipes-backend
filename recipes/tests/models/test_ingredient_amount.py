@@ -1,20 +1,11 @@
-from recipes.models import Recipe, IngredientAmount
+from recipes.tests.helpers import get_recipe_data, get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients
+
 
 class IngredientAmountTest(RecipeIngredients):
 
     def test_db_fields(self):
-        expected_ingredients = [
-            {'name': 'aubergine', 'quantity': 2, 'unit_name': 'piece'},
-            {'name': 'garlic', 'quantity': 1, 'unit_name': 'piece'}
-        ]
-        lekker = Recipe.objects.get(name='Lekker')
-        ingredients = lekker.ingredient_amounts.all()
-        for i, ingredient in enumerate(ingredients):
-            ingredient_amount = IngredientAmount.objects.get(
-                recipe=lekker,
-                ingredient=ingredient
-            )
-            self.assertEqual(ingredient.name, expected_ingredients[i]['name'])
-            self.assertEqual(ingredient_amount.quantity, expected_ingredients[i]['quantity'])
-            self.assertEqual(ingredient_amount.unit.name, expected_ingredients[i]['unit_name'])
+        recipe_data = get_recipe_data('lekker')
+        ingredient_amounts = get_ingredient_amounts(self.lekker)
+        for i, ingredient in enumerate(recipe_data['ingredients']):
+            self.compare_object_values(ingredient_amounts[i], ingredient)

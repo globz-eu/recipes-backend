@@ -1,15 +1,6 @@
 import json
 from pathlib import Path, PurePath
-from recipes.models import Ingredient, IngredientAmount
-
-
-def get_ingredient_amounts(recipe):
-    ingredient_ids = [ingredient.pk for ingredient in recipe.ingredient_amounts.all()]
-    ingredients = Ingredient.objects.filter(pk__in=ingredient_ids)
-    return IngredientAmount.objects.filter(
-        recipe=recipe,
-        ingredient__in=ingredients
-    )
+from recipes.models import IngredientAmount
 
 
 def get_recipe_data(name):
@@ -21,3 +12,26 @@ def get_recipe_data(name):
         )
     )
     return json.load(recipe_data_file.open())
+
+
+def get_ingredient_amounts(recipe):
+    return [
+        IngredientAmount.objects.select_related('amount').get(
+            recipe=recipe,
+            ingredient=ingredient
+        ) for ingredient in recipe.ingredient_set.all()
+    ]
+
+
+def check_values(returned, expected, assertion, returned_is_object=False):
+    for name, value in expected.items():
+        if returned_is_object:
+            if isinstance(value, dict):
+                check_values(getattr(returned, name), value, assertion, returned_is_object=True)
+            else:
+                assertion(getattr(returned, name), value)
+        else:
+            if isinstance(value, dict):
+                check_values(returned[name], value, assertion)
+            else:
+                assertion(returned[name], value)

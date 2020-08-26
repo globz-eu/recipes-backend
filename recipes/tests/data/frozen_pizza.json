@@ -4,26 +4,30 @@
     "servings": 4,
     "instructions": "Get out of the freezer and put in the oven at 180ºC for 20 minutes"
   },
-  "ingredient_amounts": [
+  "ingredients": [
     {
       "ingredient": {
         "name": "frozen pizza",
         "plural": "frozen pizze"
     },
-      "unit": {
-        "name":"piece"
-      },
-      "quantity": 1
+      "amount": {
+        "unit": {
+          "name":"piece"
+        },
+        "quantity": 1
+      }
     },
     {
       "ingredient": {
         "name": "garlic oil",
         "plural": "garlic oil"
     },
-      "unit": {
-        "name":"mL"
-      },
-      "quantity": 20
+      "amount": {
+        "unit": {
+          "name":"mL"
+        },
+        "quantity": 20
+      }
     }
   ]
 }
