@@ -35,7 +35,7 @@ def recipe_detail(request, pk, format=None):  # pylint: disable=redefined-builti
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = RecipeSerializer(dict(recipe=recipe, ingredient_amounts=ingredient_amounts))
+        serializer = RecipeSerializer(dict(recipe=recipe, ingredients=ingredient_amounts))
         return Response(serializer.data)
 
     if request.method == 'PUT':

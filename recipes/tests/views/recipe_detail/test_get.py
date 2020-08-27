@@ -1,6 +1,5 @@
-from recipes.serializers import RecipeSerializer
-from recipes.tests.helpers import get_ingredient_amounts
-from recipes.tests.views import status, reverse, InitializeRecipes, Authenticate, Recipe
+from recipes.tests.helpers import get_recipe_data
+from recipes.tests.views import status, reverse, InitializeRecipes, Authenticate
 
 
 class GetSingleRecipeTest(InitializeRecipes, Authenticate):
@@ -9,15 +8,14 @@ class GetSingleRecipeTest(InitializeRecipes, Authenticate):
     def setUp(self):
         InitializeRecipes.setUp(self)
         Authenticate.setUp(self)
+        self.recipe_data = get_recipe_data('lekker')
 
     def test_get_valid_single_recipe(self):
         response = self.client.get(
             reverse('recipe_detail', kwargs={'pk': self.lekker.pk}))
-        recipe = Recipe.objects.get(pk=self.lekker.pk)
-        ingredient_amounts = get_ingredient_amounts(self.lekker)
-        serializer = RecipeSerializer(dict(recipe=recipe, ingredient_amounts=ingredient_amounts))
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.compare_values(response.data['recipe'], self.recipe_data['recipe'])
+        for i, ingredient in enumerate(self.recipe_data['ingredients']):
+            self.compare_values(response.data['ingredients'][i], ingredient)
 
     def test_get_invalid_single_recipe(self):
         response = self.client.get(
