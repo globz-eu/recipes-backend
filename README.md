@@ -1,4 +1,5 @@
 # Recipes Backend
+[![Build Status](https://travis-ci.com/globz-eu/recipes-backend.svg?branch=master)](https://travis-ci.com/globz-eu/recipes-backend)
 
 Backend for [Recipes](https://github.com/globz-eu/recipes)
 
