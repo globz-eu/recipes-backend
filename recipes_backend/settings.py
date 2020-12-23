@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_jwt',
     'corsheaders',
     'recipes.apps.RecipesConfig',
 ]
@@ -144,22 +143,25 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = 'static'
 
-## Add JWT authentication to default authentication classes
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    ),
-}
+## Set up Auth0 authentication
+AUTHENTICATION = setting('AUTHENTICATION')
 
-AUTH0_DOMAIN = setting('AUTH0_DOMAIN')
-API_IDENTIFIER = setting('API_IDENTIFIER')
-PUBLIC_KEY = None
-JWT_ISSUER = None
+if AUTHENTICATION == 'Auth0':
+    AUTH0_DOMAIN = setting('AUTH0_DOMAIN')
+    INSTALLED_APPS.insert(INSTALLED_APPS.index('rest_framework') + 1, 'rest_framework_jwt')
+    REST_FRAMEWORK = {
+        'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+        ),
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        )
+    }
 
-if AUTH0_DOMAIN:
+    API_IDENTIFIER = setting('API_IDENTIFIER', accept_empty=True)
+    PUBLIC_KEY = None
+    JWT_ISSUER = None
+
     jsonurl = request.urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read().decode('utf-8'))
     cert = f"-----BEGIN CERTIFICATE-----\n{jwks['keys'][0]['x5c'][0]}\n-----END CERTIFICATE-----"
@@ -167,14 +169,14 @@ if AUTH0_DOMAIN:
     PUBLIC_KEY = certificate.public_key()
     JWT_ISSUER = f'https://{AUTH0_DOMAIN}/'
 
-def jwt_get_username_from_payload_handler(payload): # pylint: disable=unused-argument
-    return setting('AUTH0_USERNAME')
+    def jwt_get_username_from_payload_handler(payload): # pylint: disable=unused-argument
+        return setting('AUTH0_USERNAME', accept_empty=True)
 
-JWT_AUTH = {
-    'JWT_PAYLOAD_GET_USERNAME_HANDLER': jwt_get_username_from_payload_handler,
-    'JWT_PUBLIC_KEY': PUBLIC_KEY,
-    'JWT_ALGORITHM': 'RS256',
-    'JWT_AUDIENCE': API_IDENTIFIER,
-    'JWT_ISSUER': JWT_ISSUER,
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-}
+    JWT_AUTH = {
+        'JWT_PAYLOAD_GET_USERNAME_HANDLER': jwt_get_username_from_payload_handler,
+        'JWT_PUBLIC_KEY': PUBLIC_KEY,
+        'JWT_ALGORITHM': 'RS256',
+        'JWT_AUDIENCE': API_IDENTIFIER,
+        'JWT_ISSUER': JWT_ISSUER,
+        'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    }
