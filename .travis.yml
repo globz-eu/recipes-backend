@@ -19,6 +19,7 @@ jobs:
            APP_USER_PASSWORD='' \
            DB_HOST='127.0.0.1' \
            POSTGRES_PASSWORD='' \
+           AUTHENTICATION='Auth0' \
            AUTH0_DOMAIN='domain.eu.auth0.com' \
            AUTH0_USERNAME='Auth0user' \
            AUTH0_EMAIL='username@domain.eu' \
