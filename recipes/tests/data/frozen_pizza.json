@@ -1,9 +1,7 @@
 {
-  "recipe": {
-    "name": "Easy",
-    "servings": 4,
-    "instructions": "Get out of the freezer and put in the oven at 180ºC for 20 minutes"
-  },
+  "name": "Easy",
+  "servings": 4,
+  "instructions": "Get out of the freezer and put in the oven at 180ºC for 20 minutes",
   "ingredients": [
     {
       "ingredient": {

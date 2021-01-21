@@ -11,7 +11,11 @@ def get_recipe_data(name):
             f'recipes/tests/data/{name}.json'
         )
     )
-    return json.load(recipe_data_file.open())
+    recipe = json.load(recipe_data_file.open())
+    return {
+        'recipe': {key: value for (key, value) in recipe.items() if key != 'ingredients'},
+        'ingredients': recipe['ingredients']
+    }
 
 
 def get_ingredient_amounts(recipe):
