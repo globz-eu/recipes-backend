@@ -1,7 +1,7 @@
 from datetime import datetime
 from recipes.models import Recipe
 from recipes.serializers import RecipeModelSerializer, RecipeSerializer
-from recipes.tests.helpers import get_recipe_data, get_ingredient_amounts
+from recipes.tests.helpers import get_recipe_data, get_recipe_data_flat, get_ingredient_amounts
 from recipes.tests.models.setup import RecipeIngredients
 
 
@@ -39,10 +39,16 @@ class RecipeSerializerTest(RecipeIngredients):
             )
 
     def test_data_serializer(self):
-        recipe_data = get_recipe_data('frozen_pizza')
+        recipe_data = get_recipe_data_flat('frozen_pizza')
         serializer = RecipeSerializer(data=recipe_data)
+        expected_recipe = {
+            key: value for (key, value) in recipe_data.items() if key != 'ingredients'
+        }
         self.assertTrue(serializer.is_valid())
-        self.compare_values(serializer.validated_data['recipe'], recipe_data['recipe'])
+        serializer_recipe = {
+            key: value for (key, value) in serializer.data.items() if key != 'ingredients'
+        }
+        self.compare_values(serializer_recipe, expected_recipe)
         for i, ingredient in enumerate(recipe_data['ingredients']):
             self.compare_values(serializer.validated_data['ingredients'][i], ingredient)
 
