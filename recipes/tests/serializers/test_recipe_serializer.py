@@ -22,8 +22,11 @@ class RecipeSerializerTest(RecipeIngredients):
         recipe_data = get_recipe_data('lekker')
         recipe, ingredient_amounts = Recipe.recipes.get(pk=self.lekker.pk)
         serializer = RecipeSerializer(dict(recipe=recipe, ingredients=ingredient_amounts))
-        self.assertEqual(serializer.data['recipe']['id'], self.lekker.pk)
-        self.compare_values(serializer.data['recipe'], recipe_data['recipe'])
+        self.assertEqual(serializer.data['id'], self.lekker.pk)
+        serializer_recipe = {
+            key: value for (key, value) in serializer.data.items() if key != 'ingredients'
+        }
+        self.compare_values(serializer_recipe, recipe_data['recipe'])
         for i, ingredient in enumerate(recipe_data['ingredients']):
             self.compare_values(serializer.data['ingredients'][i], ingredient)
             self.assertEqual(
