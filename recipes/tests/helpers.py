@@ -18,6 +18,18 @@ def get_recipe_data(name):
     }
 
 
+def get_recipe_data_flat(name):
+    recipe_data_file = Path(
+        PurePath(
+            Path(__file__).cwd()
+        ).joinpath(
+            f'recipes/tests/data/{name}.json'
+        )
+    )
+    recipe = json.load(recipe_data_file.open())
+    return recipe
+
+
 def get_ingredient_amounts(recipe):
     return [
         IngredientAmount.objects.select_related('amount').get(

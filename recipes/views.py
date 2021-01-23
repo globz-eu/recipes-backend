@@ -19,7 +19,10 @@ def recipes(request, format=None):  # pylint: disable=redefined-builtin,unused-a
         serializer = RecipeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
+            return Response(
+                RecipeSerializer(serializer.validated_data).data,
+                status=status.HTTP_201_CREATED
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     return None
@@ -42,7 +45,10 @@ def recipe_detail(request, pk, format=None):  # pylint: disable=redefined-builti
         serializer = RecipeSerializer(recipe, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.validated_data, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                RecipeSerializer(serializer.validated_data).data,
+                status=status.HTTP_204_NO_CONTENT
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'DELETE':

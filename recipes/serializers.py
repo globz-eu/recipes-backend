@@ -40,6 +40,21 @@ class RecipeSerializer(Serializer):  # pylint: disable=abstract-method
     recipe = RecipeModelSerializer()
     ingredients = IngredientAmountSerializer(many=True, required=False)
 
+    def to_representation(self, instance):
+        """flatten recipe"""
+        recipe = Serializer.to_representation(self, instance)
+        flattened_recipe = dict(**recipe['recipe'], ingredients=recipe['ingredients'])
+        return flattened_recipe
+
+    def to_internal_value(self, data):
+        """split into recipe and ingredients"""
+        new_recipe = {
+            'recipe': {key: value for (key, value) in data.items() if key != 'ingredients'}
+        }
+        if 'ingredients' in data:
+            new_recipe['ingredients'] = data['ingredients']
+        return Serializer.to_internal_value(self, new_recipe)
+
     def create(self, validated_data):
         return Recipe.recipes.create(**validated_data)
 
