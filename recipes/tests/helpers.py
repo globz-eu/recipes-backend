@@ -11,8 +11,28 @@ def get_recipe_data(name):
             f'recipes/tests/data/{name}.json'
         )
     )
-    return json.load(recipe_data_file.open())
+    recipe = json.load(recipe_data_file.open())
+    return {
+        'recipe': {key: value for (key, value) in recipe.items() if key != 'ingredients'},
+        'ingredients': recipe['ingredients']
+    }
 
+
+def get_recipe_data_flat(name):
+    recipe_data_file = Path(
+        PurePath(
+            Path(__file__).cwd()
+        ).joinpath(
+            f'recipes/tests/data/{name}.json'
+        )
+    )
+    recipe = json.load(recipe_data_file.open())
+    return recipe, get_recipe_no_ingredients(recipe)
+
+def get_recipe_no_ingredients(recipe):
+    return {
+        key: value for (key, value) in recipe.items() if key != 'ingredients'
+    }
 
 def get_ingredient_amounts(recipe):
     return [

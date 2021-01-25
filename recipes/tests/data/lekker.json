@@ -1,9 +1,7 @@
 {
-  "recipe": {
-    "name": "Lekker",
-    "servings": 3,
-    "instructions": "Stir well"
-  },
+  "name": "Lekker",
+  "servings": 3,
+  "instructions": "Stir well",
   "ingredients": [
     {
       "ingredient": {
