@@ -43,7 +43,10 @@ class RecipeSerializer(Serializer):  # pylint: disable=abstract-method
     def to_representation(self, instance):
         """flatten recipe"""
         recipe = Serializer.to_representation(self, instance)
-        flattened_recipe = dict(**recipe['recipe'], ingredients=recipe['ingredients'])
+        if 'ingredients' in recipe:
+            flattened_recipe = dict(**recipe['recipe'], ingredients=recipe['ingredients'])
+        else:
+            flattened_recipe = dict(**recipe['recipe'])
         return flattened_recipe
 
     def to_internal_value(self, data):

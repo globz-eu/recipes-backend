@@ -27,8 +27,12 @@ def get_recipe_data_flat(name):
         )
     )
     recipe = json.load(recipe_data_file.open())
-    return recipe
+    return recipe, get_recipe_no_ingredients(recipe)
 
+def get_recipe_no_ingredients(recipe):
+    return {
+        key: value for (key, value) in recipe.items() if key != 'ingredients'
+    }
 
 def get_ingredient_amounts(recipe):
     return [

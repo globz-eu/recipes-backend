@@ -1,6 +1,6 @@
 import json
 from rest_framework.test import APITestCase
-from recipes.tests.helpers import get_recipe_data
+from recipes.tests.helpers import get_recipe_data_flat
 from recipes.tests.views import reverse, status, Authenticate
 
 
@@ -9,16 +9,16 @@ class CreateNewRecipeTest(Authenticate):
 
     def setUp(self):
         Authenticate.setUp(self)
-        self.recipe_data = get_recipe_data('lekker')
+        self.recipe_data, self.expected_recipe = get_recipe_data_flat('lekker')
 
     def test_create_valid_recipe(self):
         response = self.client.post(
             reverse('recipes'),
-            data=json.dumps(dict(recipe=self.recipe_data['recipe'])),
+            data=json.dumps(self.expected_recipe),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.compare_values(response.data['recipe'], self.recipe_data['recipe'])
+        self.compare_values(response.data, self.expected_recipe)
 
     def test_create_valid_recipe_with_ingredients(self):
         response = self.client.post(
@@ -27,7 +27,7 @@ class CreateNewRecipeTest(Authenticate):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.compare_values(response.data['recipe'], self.recipe_data['recipe'])
+        self.compare_values(response.data, self.expected_recipe)
         for i, ingredient in enumerate(self.recipe_data['ingredients']):
             self.compare_values(response.data['ingredients'][i], ingredient)
 
@@ -44,12 +44,12 @@ class CreateNewRecipeUnauthenticatedTest(APITestCase):
     """ Test creating a new recipe without authentication """
 
     def setUp(self):
-        self.recipe_data = get_recipe_data('lekker')
+        self.recipe_data, self.expected_recipe = get_recipe_data_flat('lekker')
 
     def test_create_valid_recipe(self):
         response = self.client.post(
             reverse('recipes'),
-            data=json.dumps(dict(recipe=self.recipe_data['recipe'])),
+            data=json.dumps(dict(recipe=self.recipe_data)),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
