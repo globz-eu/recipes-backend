@@ -33,7 +33,7 @@ pyparsing==2.4.5
 python-jose==3.1.0
 pytz==2019.3
 requests==2.22.0
-rsa==4.6
+rsa==4.7
 six==1.13.0
 sqlparse==0.3.0
 tblib==1.6.0
